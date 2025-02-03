@@ -119,7 +119,7 @@
 </form>
 
     <div class="login-link">
-        Already got an account? <a href="login.jsp">Sign in</a>
+        Already got an account? <a href="Login.jsp">Sign in</a>
     </div>
 </div>
 

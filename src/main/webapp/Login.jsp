@@ -167,7 +167,7 @@
 
 
     <div class="signup">
-        Didn't have an account? <a href="signup.jsp">Sign Up</a>
+        Didn't have an account? <a href="Signup.jsp">Sign Up</a>
     </div>
 </div>
 

@@ -149,11 +149,11 @@ nav ul li a {
         </div>
         <nav>
             <ul> 	
-                <li><a href="Homepage.jsp">Home</a></li>
+                <li><a href="HomePage.jsp">Home</a></li>
                 <li><a href="RecipePage.jsp">Recipe</a></li>
-                <li><a href="#">Trending</a></li>
-                <li><a href="#">Search</a></li>
-                <li><a href="login.jsp" class="sign-in">Login</a></li>
+                <li><a href="TrendingPage">Trending</a></li>
+                <li><a href="SearchPage">Search</a></li>
+                <li><a href="Login.jsp" class="sign-in">Login</a></li>
             </ul>
         </nav>
     </header>
