@@ -145,6 +145,8 @@
         <div class="recipe-grid" id="searchResults"></div>
     </div>
 
+
+
     <script>
         /* Retrieve search history from localStorage */
         let userSearchHistory = JSON.parse(localStorage.getItem("userSearchHistory")) || [];

@@ -158,7 +158,7 @@
                 <input type="checkbox" name="rememberMe"> Remember Me
             </div>
             <div class="forgot-password">
-                <a href="forgot-password.jsp">Forget Password?</a>
+                <a href="ForgetPage.jsp">Forget Password?</a>
             </div>
         </div>
 
