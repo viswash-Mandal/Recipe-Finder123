@@ -61,7 +61,7 @@ nav ul li a {
 
 /* Hero Section */
 .hero {
-    background-image: url('recipe.jpg'); /* Set local image */
+    background-image: url('bg.jpg'); /* Set local image */
     background-size: cover;
     height: 300px;
     background-position: center;
@@ -151,8 +151,8 @@ nav ul li a {
             <ul> 	
                 <li><a href="HomePage.jsp">Home</a></li>
                 <li><a href="RecipePage.jsp">Recipe</a></li>
-                <li><a href="TrendingPage">Trending</a></li>
-                <li><a href="SearchPage">Search</a></li>
+                <li><a href="Trending.jsp">Trending</a></li>
+                <li><a href="SearchPage.jsp">Search</a></li>
                 <li><a href="Login.jsp" class="sign-in">Login</a></li>
             </ul>
         </nav>

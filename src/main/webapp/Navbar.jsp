@@ -79,7 +79,7 @@
             <li><a href="Homepage.jsp">Home</a></li>
             <li><a href="RecipePage.jsp">Recipe</a></li>
             <li><a href="Trending.jsp">Trending</a></li>
-            <li><a href="Search.jsp">Search</a></li>
+            <li><a href="SearchPage.jsp">Search</a></li>
             <li><a href="Login.jsp" class="sign-in">Login</a></li>
         </ul>
     </nav>
