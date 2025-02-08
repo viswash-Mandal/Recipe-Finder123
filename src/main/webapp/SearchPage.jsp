@@ -6,25 +6,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Search</title>
+    
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ <link href="https://fonts.googleapis.com/css2?family=Capriola&display=swap" rel="stylesheet">
     <style>
         /* General body styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: Capriola, sans-serif;
             background-color: #f9f9f9;
             margin: 0;
             padding: 0;
-            display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+        }
+        
+        h1 {
+            text-align: start;
+            margin-left: 75px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h1 i {
+            cursor: pointer;
         }
 
         /* Container for the whole content */
         .container {
+        	margin-bottom: 50px;
             width: 90%;
             max-width: 1500px;
             margin: 20px auto;
-            padding: 20px;
+            padding: 50px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -126,6 +141,10 @@
     </style>
 </head>
 <body>
+
+		<h1>
+                <i class="fas fa-arrow-left" onclick="history.back()"></i> Search your Recipe
+            </h1>
     <!-- Main container -->
     <div class="container">
         <!-- Search box for searching recipes -->
@@ -217,9 +236,13 @@
                             recipeButton.style.cursor = "pointer";
 
                             /* Redirect to recipe details page on button click */
-                            recipeButton.onclick = () => {
-                                window.location.href = `RecipeDetails.jsp?mealId=${meal.idMeal}`;
-                            };
+                         recipeButton.onclick = () => {
+    if (meal.idMeal) {
+        window.location.href = `RecipeDetails.html?mealId=${meal.idMeal}`;
+    } else {
+        alert("Meal ID not available.");
+    }
+};
 
                             /* Append the button to the recipe card */
                             card.appendChild(recipeButton);
@@ -232,5 +255,7 @@
                 });
         }
     </script>
+    
+    <%@ include file= "Footer.jsp" %>
 </body>
 </html>

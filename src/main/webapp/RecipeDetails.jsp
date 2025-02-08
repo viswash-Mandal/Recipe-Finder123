@@ -6,6 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Details</title>
+
+    <!-- Include Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,9 +26,26 @@
             border-radius: 10px;
             margin-bottom: 20px;
         }
+
         h1 {
             font-size: 2rem;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Styling the back arrow */
+        .back-arrow {
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .back-arrow:hover {
+            color: #007bff;
         }
 
         h2 {
@@ -49,10 +70,9 @@
         .ingredient-con {
             justify-content: center;
             align-items: center;
-           margin-right: 150px;
+            margin-right: 150px;
             margin-left: 150px; /* Center the container horizontally */
         }
-        
         
         .instruction-container {
             margin: 15px 0;
@@ -62,16 +82,24 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: left;
         }
+
         .instruction-container p {
             margin: 0;
             line-height: 1.5;
         }
+
         .ingredient-container span {
             font-weight: bold;
         }
     </style>
 </head>
 <body>
+
+    <!-- Back arrow added with proper class for visibility -->
+    <h1>
+        <i class="fas fa-arrow-left back-arrow" onclick="history.back()"></i> Recipe Details
+    </h1>
+
     <div class="container">
         <h1 id="mealTitle">Recipe Title</h1>
         <img id="mealImage" alt="Meal Image">
@@ -90,11 +118,12 @@
     </div>
 
     <script>
-        // The original script is kept unchanged
         function getMealDetails() {
             const urlParams = new URLSearchParams(window.location.search);
             const mealId = urlParams.get("mealId");
 
+            console.log("Extracted mealId:", mealId); // Debugging
+            
             if (!mealId) {
                 alert("Meal ID is missing!");
                 return;
@@ -102,6 +131,7 @@
 
             fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
                 .then(response => response.json())
+
                 .then(data => {
                     if (!data.meals) {
                         document.body.innerHTML = "<h2>Meal not found!</h2>";
@@ -111,8 +141,6 @@
                     const meal = data.meals[0];
                     document.getElementById("mealTitle").innerText = meal.strMeal;
                     document.getElementById("mealImage").src = meal.strMealThumb;
-                    document.getElementById("mealCategory").innerText = meal.strCategory;
-                    document.getElementById("mealArea").innerText = meal.strArea;
 
                     // Display Ingredients
                     const ingredientsContainer = document.getElementById("mealIngredients");
@@ -143,5 +171,6 @@
 
         window.onload = getMealDetails;
     </script>
+
 </body>
 </html>

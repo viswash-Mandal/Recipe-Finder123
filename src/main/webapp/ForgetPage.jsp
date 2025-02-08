@@ -51,12 +51,12 @@
         }
         
         button {
-    		width: 55%;
+    		width: 45%;
     		padding: 12px;
     		background-color: transparent;
     		border: 1px solid black;
     		border-radius: 20px;
-    		font-size: 18px;
+    		font-size: 15px;
     		font-weight: bold;
     		cursor: pointer;
     		margin-top: 10px;
@@ -76,6 +76,18 @@
         a:hover {
             text-decoration: none;
         }
+        
+        .input[type="email"] {
+    		background: transparent;
+    		width: 44vh;
+    		padding: 15px;
+    		margin-bottom: 16px;
+    		border: 1px solid black;
+    		border-radius: 25px;
+    		text-align: center;
+    		box-sizing: border-box;
+    		font-size: 18px;
+}
         .header {
             position: absolute;
             top: 20px;
@@ -93,7 +105,7 @@
     </div>
 
     <h3>Forget Your Password</h3>
-    <form action="createAccount.jsp" method="post">
+    <form action="ForgotPasswordServlet" method="post">
         <input type="email" id="email" name="email" placeholder="Enter your mail" required>
         <button type="submit">Send Request</button>
     </form>

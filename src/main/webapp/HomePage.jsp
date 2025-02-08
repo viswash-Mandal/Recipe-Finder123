@@ -6,6 +6,8 @@
 <meta charset="UTF-8">
 <title>Home Page</title>
 <link href="https://fonts.googleapis.com/css2?family=Capriola&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
 <style>
 	/* Global Styles */
 body {
@@ -26,7 +28,7 @@ header {
     justify-content: space-between;
     align-items: center;
     background-color: #e40046;
-    padding: 9px;
+    padding: 5px;
     color: white;
 }
 
@@ -36,6 +38,7 @@ header {
 }
 
 nav ul {
+	align-items:center;
     list-style: none;
     display: flex;
     margin: 0;
@@ -59,6 +62,73 @@ nav ul li a {
     border-radius: 5px;
 }
 
+
+/* Signup & Sign-in Buttons */
+.auth-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-buttons a {
+    background-color: white;
+    color: #e40046;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Profile Section */
+/* Profile Section */
+.profile {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff2e; /* Add a light background */
+    padding: 10px;
+    border-radius: 50%; /* Make it circular */
+}
+
+/* Profile Icon */
+.profile-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px; /* Ensure proper sizing */
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ffffff4d; /* Light transparent background */
+    border: 2px solid white;
+}
+
+
+/* Dropdown */
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 150px;
+    z-index: 1000;
+}
+
+.dropdown a {
+    display: block;
+    padding: 8px;
+    color: black;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.dropdown a:hover {
+    background: #f5f5f5;
+}
 /* Hero Section */
 .hero {
     background-image: url('bg.jpg'); /* Set local image */
@@ -135,29 +205,70 @@ nav ul li a {
     text-align: center;
 }
 
-.more {
+	.trending h2{
+		margin-left: -62%;
+	}
+
+.more a {
     float: right;
     color: black;
     cursor: pointer;
+    text-decoration: none;
+    margin-right: 7%;
+    margin-left: -15%;
 }
 </style>
 </head>
 <body>
-    <header>
-        <div class="logo">
-            <img src="logo.png" alt="Recipe Finder Logo">
-        </div>
-        <nav>
-            <ul> 	
-                <li><a href="HomePage.jsp">Home</a></li>
-                <li><a href="RecipePage.jsp">Recipe</a></li>
-                <li><a href="Trending.jsp">Trending</a></li>
-                <li><a href="SearchPage.jsp">Search</a></li>
-                <li><a href="Login.jsp" class="sign-in">Login</a></li>
-            </ul>
-        </nav>
-    </header>
 
+
+<header>
+    <div class="logo">
+        <img src="logo.png" alt="Recipe Finder Logo">
+    </div>
+    <nav>
+        <ul>
+            <li><a href="HomePage.jsp">Home</a></li>
+            <li><a href="RecipePage.jsp">Recipes</a></li>
+            <li><a href="Trending.jsp">Trending</a></li>
+            <li><a href="SearchPage.jsp">Search</a></li>
+
+            <%
+                String user = (String) session.getAttribute("username");
+                String role = (String) session.getAttribute("role");
+
+                if (user == null) { 
+            %>
+                <!-- If No User Logged In -->
+                <li class="auth-buttons">
+                    <a href="Signup.jsp">Sign Up</a>
+                    <a href="Login.jsp">Sign In</a>
+                </li>
+            <%
+                } else {
+            %>
+                <!-- If User/Admin Logged In -->
+                <li class="profile">
+                    <div id="profileIcon" class="profile-icon">
+                        <i class="fa-regular fa-user" alt="Profile Icon"></i> 
+                    </div>
+                    <div id="profileDropdown" class="dropdown">
+                        <% if ("admin".equals(role)) { %>
+                            <a href="AdminPanal.jsp">Admin Panel</a>
+                        <% } %>
+                        <a href="Profile.jsp">Manage Profile</a>
+                        <a href="LogoutServlet">Logout</a>
+                    </div>
+                </li>
+            <%
+                }
+            %>
+        </ul>
+    </nav>
+</header>
+
+
+<!-- hero section  -->
     <section class="hero">
         <div class="hero-container">
             <h1>What can I make with.....</h1>
@@ -186,7 +297,7 @@ nav ul li a {
     </section>
 
     <section class="trending">
-        <h2>Trending Recipes <span class="more">More></span></h2>
+        <h2>Trending Recipes <span class="more"><a href="Trending.jsp">More></a></span></h2>
         <div class="trending-container">
             <div class="recipe">
                 <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Strawberry & Apple Jam">
@@ -202,6 +313,25 @@ nav ul li a {
             </div>
         </div>
     </section>
-=
+    
+<!-- JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var profileIcon = document.getElementById("profileIcon");
+    var dropdown = document.getElementById("profileDropdown");
+
+    profileIcon.addEventListener("click", function(event) {
+        event.stopPropagation();
+        dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", function(event) {
+        if (!profileIcon.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.style.display = "none";
+        }
+    });
+});
+</script>
+<%@ include file = "Footer.jsp" %>
 </body>
 </html>
