@@ -4,7 +4,6 @@
 <head>
     <title>Add Recipe</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -15,9 +14,6 @@
             margin: 0;
             padding: 0;
         }
-        
-        
-        
 
         h1 {
             text-align: center;
@@ -25,19 +21,15 @@
         }
 
         .back-container a {
-        	padding: 15px;
+            padding: 15px;
             text-decoration: none;
             color: black;
             font-size: 22px;
         }
 
         form {
-            max-width: 500px;
+            max-width: 650px;
             margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         label {
@@ -46,7 +38,7 @@
             font-weight: bold;
         }
 
-        input[type="file"], textarea {
+        input, select, textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -78,12 +70,22 @@
 <body>
 
     <div class="back-container">
-        <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
+        <a href="AdminPanal.jsp"><i class="fas fa-arrow-left"></i></a> <!-- Updated Back Button -->
     </div>
 
     <h1>Add Recipe</h1>
 
     <form action="AddRecipeServlet" method="post" enctype="multipart/form-data">
+        <label for="name">Name of Recipe:</label>
+        <input type="text" name="name" id="name" required><br>
+
+        <label for="category">Category:</label>
+        <select name="category" id="category" required>
+            <option value="Family Cooking">Family Cooking</option>
+            <option value="Healthy Food">Healthy Food</option>
+            <option value="Baked Food">Baked Food</option>
+        </select><br>
+
         <label for="image">Image:</label>
         <input type="file" name="image" id="image" required><br>
 
@@ -137,7 +139,6 @@
             window.location.href = "AddRecipe.jsp"; // Redirect back to the form
         }
 
-        // Show modal based on URL parameters
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('status') === 'success') {

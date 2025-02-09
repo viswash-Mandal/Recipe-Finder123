@@ -283,11 +283,11 @@ nav ul li a {
         <div class="inspiration-container">
             <div class="category">
                 <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Top 10">
-                <div class="section-btn"><button>Top 10</button></div>
+                <div class="section-btn"><button>Family Cooking</button></div>
             </div>
             <div class="category">
                 <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Step-by-Step Recipes">
-                <div class="section-btn"><button>Step-By-Step Recipes</button></div>
+                <div class="section-btn"><button>Healthy Meals</button></div>
             </div>
             <div class="category">
                 <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Baking Recipes">

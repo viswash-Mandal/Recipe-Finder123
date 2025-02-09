@@ -22,12 +22,7 @@ import java.util.Date;
 public class AddRecipeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // Define upload directory (Make sure this folder exists in Tomcat "webapps/uploads/")
-    private static final String UPLOAD_DIRECTORY = "C:\\uploads";  // Change this to a valid folder
-
-    public AddRecipeServlet() {
-        super();
-    }
+    private static final String UPLOAD_DIRECTORY = "C:\\uploads";  
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String dbURL = "jdbc:mysql://localhost:3306/RecipeFinder?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
@@ -38,58 +33,42 @@ public class AddRecipeServlet extends HttpServlet {
         PreparedStatement pstmt = null;
 
         try {
-            // Load MySQL JDBC Driver
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(dbURL, dbUser, dbPass);
 
-            // Retrieve form data
+            String name = request.getParameter("name");
+            String category = request.getParameter("category");
             String ingredients = request.getParameter("ingredients");
             String instructions = request.getParameter("instructions");
             Part filePart = request.getPart("image");
 
-            if (ingredients == null || instructions == null || filePart == null) {
+            if (name == null || category == null || ingredients == null || instructions == null || filePart == null) {
                 throw new Exception("Missing required fields");
             }
 
             String originalFileName = filePart.getSubmittedFileName();
-            if (originalFileName == null || originalFileName.isEmpty()) {
-                throw new Exception("Invalid image file");
-            }
-
-            // Generate unique file name
             String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
             String uniqueFileName = timeStamp + "_" + originalFileName;
 
-            // Ensure upload directory exists
             File uploadDir = new File(UPLOAD_DIRECTORY);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs(); // Create the folder if not exists
-            }
+            if (!uploadDir.exists()) uploadDir.mkdirs();
 
-            // Save image in uploads directory
             String filePath = UPLOAD_DIRECTORY + File.separator + uniqueFileName;
             filePart.write(filePath);
 
-            // Insert into database
-            String sql = "INSERT INTO Recipes (image, ingredients, instructions) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO Recipes (name, category, image, ingredients, instructions) VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, uniqueFileName); // Store only the unique file name
-            pstmt.setString(2, ingredients);
-            pstmt.setString(3, instructions);
+            pstmt.setString(1, name);
+            pstmt.setString(2, category);
+            pstmt.setString(3, uniqueFileName);
+            pstmt.setString(4, ingredients);
+            pstmt.setString(5, instructions);
             pstmt.executeUpdate();
 
-            // Redirect with success status
             response.sendRedirect("AddRecipe.jsp?status=success");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("AddRecipe.jsp?status=error");
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 }

@@ -15,6 +15,17 @@
         <servlet-name>SearchRecipeServlet</servlet-name>
         <servlet-class>SearchRecipeServlet</servlet-class>
     </servlet>
+    
+    <servlet>
+    <servlet-name>RecipeListServlet</servlet-name>
+    <servlet-class>servlets.RecipeListServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>RecipeListServlet</servlet-name>
+    <url-pattern>/RecipeListServlet</url-pattern>
+</servlet-mapping>
+    
   
   <servlet-mapping>
         <servlet-name>SearchRecipeServlet</servlet-name>
