@@ -1,176 +1,193 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Details</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecipeDetails</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Include Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<style>
+	/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-            color: #000000;
-            text-align: center;
-        }
-        
-        img {
-            height: 500px;
-            width: 500px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
+    .back-arrow {
+        text-align: left;
+        padding: 20px;
+        font-size: 22px;
+    }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+    .back-arrow a {
+        text-decoration: none;
+        color: black;
+    }
 
-        /* Styling the back arrow */
-        .back-arrow {
-            cursor: pointer;
-            font-size: 24px;
-            color: #333;
-            transition: color 0.3s ease;
-        }
+header {
+    text-align: center;
+    padding: 0px;
+}
 
-        .back-arrow:hover {
-            color: #007bff;
-        }
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
 
-        h2 {
-            text-align: start;
-            font-size: 1.5rem;
-            margin: 20px 0 10px;
-        }
-        p {
-            margin: 10px 0;
-        }
-        .ingredient-container {
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
+.tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
 
-        .ingredient-con {
-            justify-content: center;
-            align-items: center;
-            margin-right: 150px;
-            margin-left: 150px; /* Center the container horizontally */
-        }
-        
-        .instruction-container {
-            margin: 15px 0;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: left;
-        }
+.tags span {
+    background-color: #ffcdd2;
+    color: #d32f2f;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9em;
+}
 
-        .instruction-container p {
-            margin: 0;
-            line-height: 1.5;
-        }
+/* Image Section */
+.image-section {
+    text-align: center;
+    margin: 20px 0;
+}
 
-        .ingredient-container span {
-            font-weight: bold;
-        }
-    </style>
+.recipe-image {
+    width: 450px;
+    height: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ingredients Section */
+.ingredients-section {
+    margin: 20px;
+}
+
+.ingredients-section h2 {
+    padding-bottom: 5px;
+}
+
+.ingredient-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.ingredient-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: transparent;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-left:230px;
+    margin-right:260px;
+}
+
+.ingredient-name {
+    font-weight: bold;
+}
+
+.ingredient-quantity {
+    color: #555;
+}
+
+/* Instructions Section */
+.instructions-section {
+    margin: 20px;
+}
+
+.ingredients-section h2{
+	margin-left: 60px;
+}
+
+.instructions-section h2 {
+	margin-left: 60px;
+    color: black;
+    padding-bottom: 5px;
+}
+
+.instruction-list {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.instruction-list li {
+    mrgin-bottom: 10px;
+    padding: 3px;
+    margin-left: 100px;
+
+</style>
+
 </head>
 <body>
+	
+<div class="back-arrow">
+    <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
+</div>
 
-    <!-- Back arrow added with proper class for visibility -->
-    <h1>
-        <i class="fas fa-arrow-left back-arrow" onclick="history.back()"></i> Recipe Details
-    </h1>
+    <!-- Header Section -->
+    <header>
+        <h1>Strawberry & Apple Jam</h1>
+        <p>Low Fat, Fat-Free, Low in Saturated Fat, Low Cholesterol, Cholesterol-Free, Trans-fat Free,
+				Sodium-Free, Low Sodium</p>
+    </header>
 
-    <div class="container">
-        <h1 id="mealTitle">Recipe Title</h1>
-        <img id="mealImage" alt="Meal Image">
+    <!-- Image Section -->
+    <section class="image-section">
+        <img src="https://idsb.tmgrup.com.tr/ly/uploads/images/2022/08/12/224234.jpg" alt="Strawberry & Apple Jam" class="recipe-image">
+    </section>
 
-        <h2>Ingredients</h2>
-        <div class="ingredient-con">
-            <div id="mealIngredients">
-                <!-- Individual ingredient containers will be dynamically inserted here -->
+    <!-- Ingredients Section -->
+    <section class="ingredients-section">
+        <h2>Ingredients need to make it</h2>
+        <div class="ingredient-container">
+            <div class="ingredient-item">
+                <span class="ingredient-name">Strawberry</span>
+                <span class="ingredient-quantity">500g</span>
+            </div>
+            <div class="ingredient-item">
+                <span class="ingredient-name">Apples</span>
+                <span class="ingredient-quantity">500g</span>
+            </div>
+            <div class="ingredient-item">
+                <span class="ingredient-name">Lemon juice</span>
+                <span class="ingredient-quantity">1/4 cup</span>
+            </div>
+            <div class="ingredient-item">
+                <span class="ingredient-name">Water</span>
+                <span class="ingredient-quantity">2 cups</span>
+            </div>
+            <div class="ingredient-item">
+                <span class="ingredient-name">Sugar</span>
+                <span class="ingredient-quantity">1 Kg</span>
             </div>
         </div>
+    </section>
 
+    <!-- Instructions Section -->
+    <section class="instructions-section">
         <h2>Instructions</h2>
-        <div id="mealInstructions">
-            <!-- Individual instruction containers will be dynamically inserted here -->
-        </div>
-    </div>
-
-    <script>
-        function getMealDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const mealId = urlParams.get("mealId");
-
-            console.log("Extracted mealId:", mealId); // Debugging
-            
-            if (!mealId) {
-                alert("Meal ID is missing!");
-                return;
-            }
-
-            fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
-                .then(response => response.json())
-
-                .then(data => {
-                    if (!data.meals) {
-                        document.body.innerHTML = "<h2>Meal not found!</h2>";
-                        return;
-                    }
-
-                    const meal = data.meals[0];
-                    document.getElementById("mealTitle").innerText = meal.strMeal;
-                    document.getElementById("mealImage").src = meal.strMealThumb;
-
-                    // Display Ingredients
-                    const ingredientsContainer = document.getElementById("mealIngredients");
-                    for (let i = 1; i <= 20; i++) {
-                        const ingredient = meal[`strIngredient${i}`];
-                        const measure = meal[`strMeasure${i}`];
-                        if (ingredient && ingredient.trim() !== "") {
-                            const ingredientDiv = document.createElement("div");
-                            ingredientDiv.classList.add("ingredient-container");
-                            ingredientDiv.innerHTML = `<span>${ingredient}</span><span>${measure}</span>`;
-                            ingredientsContainer.appendChild(ingredientDiv);
-                        }
-                    }
-
-                    // Display Instructions
-                    const instructionsContainer = document.getElementById("mealInstructions");
-                    const instructions = meal.strInstructions.split(". ");
-                    instructions.forEach((step, index) => {
-                        if (step.trim() !== "") {
-                            const instructionDiv = document.createElement("div");
-                            instructionDiv.classList.add("instruction-container");
-                            instructionDiv.innerHTML = `<p><strong>Step ${index + 1}:</strong> ${step.trim()}.</p>`;
-                            instructionsContainer.appendChild(instructionDiv);
-                        }
-                    });
-                });
-        }
-
-        window.onload = getMealDetails;
-    </script>
-
+        <ol class="instruction-list">
+            <li>Wash, hull and half the strawberries.</li>
+            <li>Peel, core and quarter the apples. Then cut quarters into thin slices.</li>
+            <li>Put all the ingredients, except the sugar, into a large pot.</li>
+            <li>Cover and bring to a boil. Simmer until the fruit is tender.</li>
+            <li>Add warmed sugar and stir until it has dissolved. Increase heat, stirring frequently and cook until setting point is reached.</li>
+            <li>Remove from heat and let stand for 5 minutes.</li>
+            <li>Pour into warm sterile jars and seal.</li>
+        </ol>
+    </section>
+    
+    <%@ include file="Footer.jsp" %>
 </body>
 </html>

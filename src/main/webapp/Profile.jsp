@@ -9,7 +9,7 @@
 
     String profileImage = (userSession != null && userSession.getAttribute("profileImage") != null) 
                         ? (String) userSession.getAttribute("profileImage") 
-                        : "default.png";
+                        : "logo.png";
 %>
 
 <!DOCTYPE html>
@@ -121,7 +121,7 @@
         <div class="menu-item"><i class="fas fa-cog"></i><a href="ChangePassword.jsp">Settings</a></div>
         <div class="menu-item"><i class="fas fa-bullseye"></i> <a href="Ourgoals.jsp">Our Goals</a></div>
         <div class="menu-item"><i class="fas fa-info-circle"></i> <a href="About.jsp">About</a></div>
-        <div class="menu-item"><i class="fas fa-user-friends"></i> <a href="Support.jsp">Support</a></div>
+        <div class="menu-item"><i class="fas fa-user-friends"></i> <a href="support.jsp">Support</a></div>
     </div>
 </div>
 

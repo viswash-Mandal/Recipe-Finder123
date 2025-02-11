@@ -113,7 +113,7 @@
                     <p>255</p>
                 </div>
                 <div class="card">
-                    <h3>Vegetarian Recipes</h3>
+                    <h3>Healthy Meal</h3>
                     <p id="vegetarianRecipes">0</p>
                 </div>
                 <div class="card">

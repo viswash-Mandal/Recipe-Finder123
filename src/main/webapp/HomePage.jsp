@@ -205,6 +205,11 @@ nav ul li a {
     text-align: center;
 }
 
+	.section-btn button a{
+		color: black;
+		text-decoration: none;
+	}
+
 	.trending h2{
 		margin-left: -62%;
 	}
@@ -282,16 +287,16 @@ nav ul li a {
         <p> To make something new...</p>
         <div class="inspiration-container">
             <div class="category">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Top 10">
-                <div class="section-btn"><button>Family Cooking</button></div>
+                <img src="https://thepeasantsdaughter.net/wp-content/uploads/2024/08/hungarian-goulash-gulyas-recipe.jpg" alt="Top 10">
+                <div class="section-btn"><button><a href="Family.jsp">FamilyCooking</a></button></div>
             </div>
             <div class="category">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Step-by-Step Recipes">
-                <div class="section-btn"><button>Healthy Meals</button></div>
+                <img src="https://hips.hearstapps.com/hmg-prod/images/harvest-bowls-index-66b3f14d6d5d4.jpg?crop=0.502xw:1.00xh;0,0&resize=640:*" alt="Step-by-Step Recipes">
+                <div class="section-btn"><button><a href="Healthy.jsp">Healthy Meals</a></button></div>
             </div>
             <div class="category">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Baking Recipes">
-                <div class="section-btn"><button>Baking Recipe</button></div>
+                <img src="https://www.pamelasproducts.com/cdn/shop/files/PanPancakeMix.jpg?v=1694125550" alt="Baking Recipes">
+                <div class="section-btn"><button><a href="Baking.jsp">Baking Recipe</a></button></div>
             </div>
         </div>
     </section>
@@ -300,16 +305,16 @@ nav ul li a {
         <h2>Trending Recipes <span class="more"><a href="Trending.jsp">More></a></span></h2>
         <div class="trending-container">
             <div class="recipe">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Strawberry & Apple Jam">
-                <div class="section-btn"><button>Strawberry and Apple Jam</button></div>
+                <img src="https://thegirlonbloor.com/wp-content/uploads/2022/05/Caprese-Chicken-12.jpg" alt="Strawberry & Apple Jam">
+                <div class="section-btn"><button>Caprese chicken breasts</button></div>
             </div>
             <div class="recipe">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Bisquick Spinach Quiche">
-                <div class="section-btn"><button>Bisquick Spinach Quiche</button></div>
+                <img src="https://cdn.jwplayer.com/v2/media/I6LvfLRI/thumbnails/GvXUEl1Z.jpg" alt="Bisquick Spinach Quiche">
+                <div class="section-btn"><button>Beef Tenderloin</button></div>
             </div>
             <div class="recipe">
-                <img src="https://images.immediate.co.uk/production/volatile/sites/30/2022/08/Fish-Tacos-1337495.jpg?quality=90&resize=556,505" alt="Banana Nut Oatmeal Muffins">
-                <div class="section-btn"><button>Banana Nut Oatmeal Muffins</button></div>
+                <img src="https://static01.nyt.com/images/2023/08/24/multimedia/LH-Goulash-kfmt/LH-Goulash-kfmt-superJumbo.jpg" alt="Banana Nut Oatmeal Muffins">
+                <div class="section-btn"><button>Goulash</button></div>
             </div>
         </div>
     </section>

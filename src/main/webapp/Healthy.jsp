@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Trending Page</title>
+<title>Healthy Meal</title>
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
  <link href="https://fonts.googleapis.com/css2?family=Capriola&display=swap" rel="stylesheet">
     
@@ -92,7 +92,7 @@
         <div class= ' hea'>
         	<header>
             <h1>
-                <i class="fas fa-arrow-left" onclick="history.back()"></i> Trending Recipe
+                <i class="fas fa-arrow-left" onclick="history.back()"></i> Healthy Meal
             </h1>
         	</header>
         </div>
@@ -115,43 +115,24 @@
         </div>
 
         <!-- Replicated Sections -->
-<div class="recipe-grid-wrapper">
+        <div class="recipe-grid-wrapper">
             <div class="recipe-grids">
                 <div class="recipe">
-                   
-                    <img src="https://www.inspiredtaste.net/wp-content/uploads/2024/02/Easy-Italian-Meatballs-Recipe-3.jpg" alt="Chocolate Chip Pancakes">
-                    <div class="section-btn"><button>Homemade Meatballs</button></div>
+                    <img src="https://thewoodenskillet.com/wp-content/uploads/2016/07/zesty-italian-pasta-salad-1.jpg" alt="Chocolate Chip Pancakes">
+                    <div class="section-btn"><button>Italian pasta salad</button></div>
                 </div>
                 <div class="recipe">
-                    <img src="https://cdn.jwplayer.com/v2/media/I6LvfLRI/thumbnails/GvXUEl1Z.jpg" alt="Avocado Toast">
-                    <div class="section-btn"><button>Beef Tenderloin</button></div>
+                    <img src="https://www.goodlifeeats.com/wp-content/uploads/2022/06/Recipe-for-Veggie-Quesadillas-720x720.jpg" alt="Avocado Toast">
+                    <div class="section-btn"><button>Veggie quesadillas</button></div>
                 </div>
                 <div class="recipe">
-                    <img src="https://static01.nyt.com/images/2023/08/24/multimedia/LH-Goulash-kfmt/LH-Goulash-kfmt-superJumbo.jpg" alt="Blueberry Muffins">
-                    <div class="section-btn"><button>Goulash</button></div>
+                    <img src="https://www.easyhomemadelife.com/wp-content/uploads/2024/09/potato-bar-1-1024x768.jpg" alt="Blueberry Muffins">
+                    <div class="section-btn"><button>Baked potato bar with healthy toppings</button></div>
                 </div>
             </div>
         </div>
         
         <div class="recipe-grid-wrapper">
-            <div class="recipe-grids">
-                <div class="recipe">
-                    <img src="https://theskinnyishdish.com/wp-content/uploads/2016/07/IMG_2160-1024x1024.jpg" alt="Strawberry & Apple Jam">
-                    <div class="section-btn"><button>White Chicken Enchiladas</button></div>
-                </div>
-                <div class="recipe">
-                    <img src="https://mojo.generalmills.com/api/public/content/uS1qIP6yikCNgtjqlpDcZA_webp_base.webp?v=664c475b&t=191ddcab8d1c415fa10fa00a14351227" alt="Bisquick Spinach Quiche">
-                    <div class="section-btn"><button>Manicotti</button></div>
-                </div>
-                <div class="recipe">
-                    <img src="https://healthyfitnessmeals.com/wp-content/uploads/2020/08/Chicken-broccoli-casserole-SQ.jpg" alt="Banana Nut Oatmeal Muffins">
-                    <div class="section-btn"><button>Broccoli Chicken Casserole</button></div>
-                </div>
-            </div>
-        </div>
-        
-        
-                <div class="recipe-grid-wrapper">
             <div class="recipe-grids">
                 <div class="recipe">
                    

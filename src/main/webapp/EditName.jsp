@@ -76,23 +76,21 @@
             margin-top: 20px;
         }
 
-        .button-container {
-        	width: 60px;
-        	height: 52px;
-        	margin-top: 18px;
-            display: flex;
-            justify-content: center;
-        }
+         .button-container {
+        width: 100%; /* Ensures the container takes full width */
+        display: flex;
+        justify-content: center; /* Centers the button horizontally */
+        margin-top: 18px;
+    }
 
         .save-btn {
             padding: 10px 20px;
             font-size: 18px;
-            border: 2px solid #333; /* Reduced border thickness */
-            border-radius: 5px;
-            background-color: white; /* White background */
+            border: 1px solid #333; /* Reduced border thickness */
+            border-radius: 10px;
+            background-color: transparent; /* White background */
             color: black; /* Black text */
             cursor: pointer;
-            height: 40px; /* Reduced height */
             width: 100px; /* Adjusted width */
             display: flex;
             align-items: center;
@@ -122,13 +120,12 @@
         <form action="UpdateNameServlet" method="post">
             <label for="newName"><strong>Edit Name</strong></label><br>
             <input type="text" id="newName" name="newName" placeholder="Change Name" required>
-            
-            <div class="button-container">
-            	<button type= "Submit">save it</button>
-            </div>
-            
-            
         </form>
+        	<div class="button-container">
+    		<button type="submit" class="save-btn">Save It</button>
+			</div>
+        	
+        
     </div>
 </div>
 

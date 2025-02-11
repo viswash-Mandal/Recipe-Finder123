@@ -85,10 +85,15 @@
             height: 50px;
             text-align: center;
         }
+        
+        .section-btn button a{
+        text-decoration: none;
+        color: black;
+        }
 
         .favorite {
             position: absolute;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: grey;
             border-radius: 50%;
             padding: 5px;
             cursor: pointer;
@@ -118,19 +123,24 @@
         <div class="recipe-grid-wrapper">
             <div class="recipe-grids">
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
-                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Strawberry & Apple Jam">
-                    <div class="section-btn"><button>Strawberry and Apple Jam</button></div>
+                    <div class="favorite" onclick="toggleFavorite(this, 'Strawberry and Apple Jam', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <img src="https://i.ytimg.com/vi/ILrPPQCfZsU/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDDV4X9LG68ZBJphw2SH_W4qAC-Ag" alt="Strawberry & Apple Jam">
+                    <div class="section-btn"><button><a href="RecipeDetails.jsp">Strawberry and Apple Jam</a></button></div>
                 </div>
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
-                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Bisquick Spinach Quiche">
-                    <div class="section-btn"><button>Bisquick Spinach Quiche</button></div>
+					<div class="favorite" onclick="toggleFavorite(this, 'Bisquick Spinach Quiche', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Bisquick Spinach Quiche">
+                    <div class="section-btn"><button><a href="RecipeDetails.jsp">Bisquick Spinach Quiche</a></button></div>
                 </div>
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
+                    <div class="favorite" onclick="toggleFavorite(this, 'Banana Nut Oatmeal Muffins', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>
                     <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Banana Nut Oatmeal Muffins">
-                    <div class="section-btn"><button>Banana Nut Oatmeal Muffins</button></div>
+                    <div class="section-btn"><button><a href="RecipeDetails.jsp">Banana Nut Oatmeal Muffins</a></button></div>
                 </div>
             </div>
         </div>
@@ -139,19 +149,24 @@
         <div class="recipe-grid-wrapper">
             <div class="recipe-grids">
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
+                <div class="favorite" onclick="toggleFavorite(this, 'Chocolate Chip Pancakes', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>
                     <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Chocolate Chip Pancakes">
-                    <div class="section-btn"><button>Chocolate Chip Pancakes</button></div>
+                    <div class="section-btn"><button><a href="RecipeDetails.jsp">Chocolate Chip Pancakes</a></button></div>
                 </div>
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
+                	<div class="favorite" onclick="toggleFavorite(this, 'Avocado Toast', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>
                     <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Avocado Toast">
-                    <div class="section-btn"><button>Avocado Toast</button></div>
+                    <div class="section-btn"><button><a href="RecipeDetails.jsp">Avocado Toast</a></button></div>
                 </div>
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
-                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Blueberry Muffins">
-                    <div class="section-btn"><button>Blueberry Muffins</button></div>
+<div class="favorite" onclick="toggleFavorite(this, 'Blueberry Muffins', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Blueberry Muffins">
+                    <div class="section-btn"><button><a href="RecipeDetails.jsp">Blueberry Muffins</a></button></div>
                 </div>
             </div>
         </div>
@@ -159,29 +174,47 @@
         <div class="recipe-grid-wrapper">
             <div class="recipe-grids">
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
-                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Chocolate Chip Pancakes">
+					<div class="favorite" onclick="toggleFavorite(this, 'Chocolate Chip Pancakes', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Chocolate Chip Pancakes">
                     <div class="section-btn"><button>Chocolate Chip Pancakes</button></div>
                 </div>
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
-                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Avocado Toast">
+					<div class="favorite" onclick="toggleFavorite(this, 'Avocado Toast', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Avocado Toast">
                     <div class="section-btn"><button>Avocado Toast</button></div>
                 </div>
                 <div class="recipe">
-                    <div class="favorite" onclick="toggleFavorite(this)"><i class="fas fa-heart"></i></div>
-                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Blueberry Muffins">
+					<div class="favorite" onclick="toggleFavorite(this, 'Blueberry Muffins', 'https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg')">
+                        <i class="fas fa-heart"></i>
+                    </div>                    <img src="https://www.truefoodkitchen.com/wp-content/uploads/2024/05/Home_WhatsNew_Brunch_623x398-100-1.jpg" alt="Blueberry Muffins">
                     <div class="section-btn"><button>Blueberry Muffins</button></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <script>
-        function toggleFavorite(button) {
-            button.classList.toggle('active');
+<script>
+function toggleFavorite(button, recipeName, recipeImage) {
+    button.classList.toggle("active");
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (button.classList.contains("active")) {
+        // Add to favorites
+        if (!favorites.some(recipe => recipe.name === recipeName)) {
+            favorites.push({ name: recipeName, image: recipeImage });
         }
-    </script>
+    } else {
+        // Remove from favorites
+        favorites = favorites.filter(recipe => recipe.name !== recipeName);
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+}
+</script>
+
     
     <%@ include file="Footer.jsp" %>
 </body>

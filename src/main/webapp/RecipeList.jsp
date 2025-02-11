@@ -25,7 +25,6 @@
         }
 
         .search-box {
-            display: flex;
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
@@ -33,20 +32,24 @@
         }
 
         .search-box input {
+        	background-color: transparent;
             padding: 8px;
             width: 70%;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            border-radius: 10px;
+            border: 1px solid black;
         }
 
         .search-box button {
+        	background-color: transparent;
+        	color: black;
+        	border: 1px solid black;
             padding: 8px 15px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
+            background: transparent;
             border-radius: 8px;
         }
 
@@ -112,24 +115,22 @@
             <th>Delete</th>
         </tr>
         <tbody id="recipeTableBody">
-            <%
-                List<Recipe> recipes = (List<Recipe>) request.getAttribute("recipeList");
-                if (recipes != null && !recipes.isEmpty()) {
-                    for (Recipe recipe : recipes) {
-            %>
+            <%-- Sample Data --%>
             <tr>
-                <td><%= recipe.getName() %></td>
-                <td><button class="icon-btn" onclick="editRecipe(<%= recipe.getId() %>)"><i class="fas fa-edit"></i></button></td>
-                <td><button class="icon-btn delete-icon" onclick="confirmDelete(<%= recipe.getId() %>)"><i class="fas fa-trash-alt"></i></button></td>
+                <td>Spaghetti Bolognese</td>
+                <td><button class="icon-btn" onclick="editRecipe(1)"><i class="fas fa-edit"></i></button></td>
+                <td><button class="icon-btn delete-icon" onclick="confirmDelete(1)"><i class="fas fa-trash-alt"></i></button></td>
             </tr>
-            <%
-                    }
-                } else {
-            %>
-            <tr><td colspan="3">No recipes found.</td></tr>
-            <%
-                }
-            %>
+            <tr>
+                <td>Grilled Chicken Salad</td>
+                <td><button class="icon-btn" onclick="editRecipe(2)"><i class="fas fa-edit"></i></button></td>
+                <td><button class="icon-btn delete-icon" onclick="confirmDelete(2)"><i class="fas fa-trash-alt"></i></button></td>
+            </tr>
+            <tr>
+                <td>Chocolate Cake</td>
+                <td><button class="icon-btn" onclick="editRecipe(3)"><i class="fas fa-edit"></i></button></td>
+                <td><button class="icon-btn delete-icon" onclick="confirmDelete(3)"><i class="fas fa-trash-alt"></i></button></td>
+            </tr>
         </tbody>
     </table>
 </div>
@@ -161,6 +162,15 @@ function searchRecipes() {
         .catch(error => console.error('Error:', error));
 }
 
+function editRecipe(id) {
+    window.location.href = `UpdateRecipe.jsp?id=${id}`;
+}
+
+function confirmDelete(id) {
+    if (confirm("Are you sure you want to delete this recipe?")) {
+        window.location.href = `DeleteRecipeServlet?id=${id}`;
+    }
+}
 </script>
 
 </body>
