@@ -104,7 +104,7 @@
 <div class="container">
 <div class="profile-image">
     <img src="ProfileImageServlet" alt="Profile Image" width="100" height="100" style="border-radius: 50%;">
-    <form action="ProfileServlet" method="post" enctype="multipart/form-data">
+	<form action="ProfileServlet" method="post" enctype="multipart/form-data">
         <label for="fileInput">
             <i class="fas fa-camera" style="cursor: pointer;"></i>
         </label>

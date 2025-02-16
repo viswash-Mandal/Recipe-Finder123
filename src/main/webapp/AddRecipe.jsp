@@ -20,6 +20,7 @@
             color: #333;
         }
 
+
         .back-container a {
             padding: 15px;
             text-decoration: none;
@@ -30,6 +31,10 @@
         form {
             max-width: 650px;
             margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
 
         label {
@@ -70,33 +75,43 @@
 <body>
 
     <div class="back-container">
-        <a href="AdminPanal.jsp"><i class="fas fa-arrow-left"></i></a> <!-- Updated Back Button -->
+        <a href="AdminPanal.jsp"><i class="fas fa-arrow-left"></i></a>
     </div>
 
     <h1>Add Recipe</h1>
+<form action="AddRecipeServlet" method="post" enctype="multipart/form-data">
+    <label for="name">Name of Recipe:</label>
+    <input type="text" name="name" id="name" required><br>
 
-    <form action="AddRecipeServlet" method="post" enctype="multipart/form-data">
-        <label for="name">Name of Recipe:</label>
-        <input type="text" name="name" id="name" required><br>
+    <label for="category">Category:</label>
+    <select name="category" id="category" required>
+        <option value="">Select your Category</option>
+        <option value="Vegetarian">Vegetarian</option>
+        <option value="Non-Vegetarian">Non-Vegetarian</option>
+        <option value="Baking">Baking</option>
+        <option value="Party">Party</option>
+        <option value="Salad">Salad</option>
+        <option value="Desserts">Desserts</option>
+        <option value="Soup">Soup</option>
+        <option value="Healthy">Healthy</option>
+        <option value="Sweets">Sweets</option>
+    </select><br>
 
-        <label for="category">Category:</label>
-        <select name="category" id="category" required>
-            <option value="Family Cooking">Family Cooking</option>
-            <option value="Healthy Food">Healthy Food</option>
-            <option value="Baked Food">Baked Food</option>
-        </select><br>
+    <label for="image">Upload Image:</label>
+    <input type="file" name="image" id="image" accept="image/*" required><br>
 
-        <label for="image">Image:</label>
-        <input type="file" name="image" id="image" required><br>
+    <label for="ingredients">Ingredients:</label>
+    <textarea name="ingredients" id="ingredients" required></textarea><br>
 
-        <label for="ingredients">Ingredients:</label>
-        <textarea name="ingredients" id="ingredients" required></textarea><br>
+    <label for="instructions">Instructions:</label>
+    <textarea name="instructions" id="instructions" required></textarea><br>
 
-        <label for="instructions">Instructions:</label>
-        <textarea name="instructions" id="instructions" required></textarea><br>
+    <!-- Video Link (Now Supports Any Platform) -->
+    <label for="videoLink">Video Link (Optional - Any Platform):</label>
+    <input type="text" name="videoLink" id="videoLink" placeholder="https://video-platform.com/video-id"><br>
 
-        <input type="submit" value="Add Recipe">
-    </form>
+    <input type="submit" value="Add Recipe">
+</form>
 
     <!-- Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1">
@@ -136,7 +151,7 @@
 
     <script>
         function redirect() {
-            window.location.href = "AddRecipe.jsp"; // Redirect back to the form
+            window.location.href = "AddRecipe.jsp";
         }
 
         window.onload = function() {

@@ -78,7 +78,7 @@ h1 {
 <body>
 
 	<div class="back-container">
-        <a href="RecipeList.jsp"><i class="fas fa-arrow-left"></i></a> <!-- Updated Back Button -->
+        <a href="AdminPanal.jsp"><i class="fas fa-arrow-left"></i></a> <!-- Updated Back Button -->
     </div>
     <div class="container">
         <h1>Update Recipes</h1>

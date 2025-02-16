@@ -20,6 +20,7 @@ body {
 h1, h2, h3, p {
     text-align: center;
     color: #333;
+    text-decoration: none;
 }
 
 /* Navigation Bar */
@@ -161,6 +162,12 @@ nav ul li a {
     text-align: start;
 }
 
+.inspiration h2 a {
+    text-decoration: none;
+    color: black;
+}
+
+
 /* Inspiration & Trending Recipes */
 .inspiration-container, .trending-container {
     display: flex;
@@ -168,6 +175,7 @@ nav ul li a {
     gap: 55px; /* Decreased gap */
     padding: 20px; /* Decreased padding */
     flex-wrap: wrap;
+
 }
 
 .category img, .recipe img {
@@ -285,18 +293,19 @@ nav ul li a {
     <section class="inspiration">
         <h2>Looking for inspiration?</h2>
         <p> To make something new...</p>
+        <h2><a href="CategoryPage.jsp">More></a></h2>
         <div class="inspiration-container">
             <div class="category">
                 <img src="https://thepeasantsdaughter.net/wp-content/uploads/2024/08/hungarian-goulash-gulyas-recipe.jpg" alt="Top 10">
-                <div class="section-btn"><button><a href="Family.jsp">FamilyCooking</a></button></div>
+                <div class="section-btn"><button><a href="RecipeServlet?category=Vegetarian">Vegetarian Recipes</a></button></div>
             </div>
             <div class="category">
                 <img src="https://hips.hearstapps.com/hmg-prod/images/harvest-bowls-index-66b3f14d6d5d4.jpg?crop=0.502xw:1.00xh;0,0&resize=640:*" alt="Step-by-Step Recipes">
-                <div class="section-btn"><button><a href="Healthy.jsp">Healthy Meals</a></button></div>
+                <div class="section-btn"><button><a href="RecipeServlet?category=Healthy">Healthy Recipes</a></button></div>
             </div>
             <div class="category">
                 <img src="https://www.pamelasproducts.com/cdn/shop/files/PanPancakeMix.jpg?v=1694125550" alt="Baking Recipes">
-                <div class="section-btn"><button><a href="Baking.jsp">Baking Recipe</a></button></div>
+                <div class="section-btn"><button><a href="RecipeServlet?category=Baking">Baking Recipes</a></button></div>
             </div>
         </div>
     </section>

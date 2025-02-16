@@ -9,14 +9,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-	/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-}
+    /* General Styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+    }
 
     .back-arrow {
         text-align: left;
@@ -29,165 +29,210 @@ body {
         color: black;
     }
 
-header {
-    text-align: center;
-    padding: 0px;
-}
+    header {
+        text-align: center;
+        padding: 0px;
+    }
 
-header h1 {
-    margin: 0;
-    font-size: 2.5em;
-}
+    header h1 {
+        margin: 0;
+        font-size: 2.5em;
+    }
 
-.tags {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-}
+    .tags {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+    }
 
-.tags span {
-    background-color: #ffcdd2;
-    color: #d32f2f;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.9em;
-}
+    .tags span {
+        background-color: #ffcdd2;
+        color: #d32f2f;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9em;
+    }
 
-/* Image Section */
-.image-section {
-    text-align: center;
-    margin: 20px 0;
-}
+    /* Image Section */
+    .image-section {
+        text-align: center;
+        margin: 20px 0;
+    }
 
-.recipe-image {
-    width: 450px;
-    height: 300px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+    .recipe-image {
+        width: 450px;
+        height: 300px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-/* Ingredients Section */
-.ingredients-section {
-    margin: 20px;
-}
+    /* Ingredients Section */
+    .ingredients-section {
+        margin: 20px;
+    }
 
-.ingredients-section h2 {
-    padding-bottom: 5px;
-}
+    .ingredients-section h2 {
+        padding-bottom: 5px;
+        margin-left: 60px;
+    }
 
-.ingredient-container {
-    display: flex;
-    flex-direction: column;
-}
+    .ingredient-container {
+        display: flex;
+        flex-direction: column;
+    }
 
-.ingredient-item {
-    display: flex;
-    justify-content: space-between;
-    background-color: transparent;
-    padding: 10px;
-    border: 1px solid black;
-    border-radius: 5px;
-    margin-left:230px;
-    margin-right:260px;
-}
+    .ingredient-item {
+        display: flex;
+        justify-content: space-between;
+        background-color: transparent;
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+        margin-left: 230px;
+        margin-right: 260px;
+    }
 
-.ingredient-name {
-    font-weight: bold;
-}
+    .ingredient-name {
+        font-weight: bold;
+    }
 
-.ingredient-quantity {
-    color: #555;
-}
+    .ingredient-quantity {
+        color: #555;
+    }
 
-/* Instructions Section */
-.instructions-section {
-    margin: 20px;
-}
+    /* Instructions Section */
+    .instructions-section {
+        margin: 20px;
+    }
 
-.ingredients-section h2{
-	margin-left: 60px;
-}
+    .instructions-section h2 {
+        color: black;
+        padding-bottom: 5px;
+        margin-left: 60px;
+    }
 
-.instructions-section h2 {
-	margin-left: 60px;
-    color: black;
-    padding-bottom: 5px;
-}
+    .instruction-list {
+        padding-left: 0;
+    }
 
-.instruction-list {
-    list-style-type: decimal;
-    padding-left: 20px;
-}
+    .instruction-item {
+        background-color: transparent;
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+        margin-left: 230px;
+        margin-right: 260px;
+        margin-bottom: 10px;
+    }
 
-.instruction-list li {
-    mrgin-bottom: 10px;
-    padding: 3px;
-    margin-left: 100px;
+    .video-section {
+        text-align: center;
+        margin: 20px 0;
+    }
 
+    .watch-video-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: white;
+        background-color: #007BFF;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    .watch-video-button:hover {
+        background-color: #0056b3;
+    }
 </style>
 
 </head>
 <body>
-	
+
 <div class="back-arrow">
     <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
 </div>
 
+<%
+    String recipeId = request.getParameter("id");
+
+    if (recipeId != null && !recipeId.isEmpty()) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");
+
+            String query = "SELECT * FROM recipes WHERE id = ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, recipeId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+%>
+
     <!-- Header Section -->
     <header>
-        <h1>Strawberry & Apple Jam</h1>
-        <p>Low Fat, Fat-Free, Low in Saturated Fat, Low Cholesterol, Cholesterol-Free, Trans-fat Free,
-				Sodium-Free, Low Sodium</p>
+        <h1><%= rs.getString("name") %></h1>
+        <p><%= rs.getString("category") %></p>
     </header>
 
     <!-- Image Section -->
     <section class="image-section">
-        <img src="https://idsb.tmgrup.com.tr/ly/uploads/images/2022/08/12/224234.jpg" alt="Strawberry & Apple Jam" class="recipe-image">
+        <img src="<%= rs.getString("image") %>" alt="<%= rs.getString("name") %>" class="recipe-image">
     </section>
 
     <!-- Ingredients Section -->
     <section class="ingredients-section">
         <h2>Ingredients need to make it</h2>
         <div class="ingredient-container">
-            <div class="ingredient-item">
-                <span class="ingredient-name">Strawberry</span>
-                <span class="ingredient-quantity">500g</span>
-            </div>
-            <div class="ingredient-item">
-                <span class="ingredient-name">Apples</span>
-                <span class="ingredient-quantity">500g</span>
-            </div>
-            <div class="ingredient-item">
-                <span class="ingredient-name">Lemon juice</span>
-                <span class="ingredient-quantity">1/4 cup</span>
-            </div>
-            <div class="ingredient-item">
-                <span class="ingredient-name">Water</span>
-                <span class="ingredient-quantity">2 cups</span>
-            </div>
-            <div class="ingredient-item">
-                <span class="ingredient-name">Sugar</span>
-                <span class="ingredient-quantity">1 Kg</span>
-            </div>
+            <% for (String ingredient : rs.getString("ingredients").split("\\n")) { %>
+                <div class="ingredient-item">
+                    <span class="ingredient-name"><%= ingredient %></span>
+                </div>
+            <% } %>
         </div>
     </section>
 
     <!-- Instructions Section -->
     <section class="instructions-section">
         <h2>Instructions</h2>
-        <ol class="instruction-list">
-            <li>Wash, hull and half the strawberries.</li>
-            <li>Peel, core and quarter the apples. Then cut quarters into thin slices.</li>
-            <li>Put all the ingredients, except the sugar, into a large pot.</li>
-            <li>Cover and bring to a boil. Simmer until the fruit is tender.</li>
-            <li>Add warmed sugar and stir until it has dissolved. Increase heat, stirring frequently and cook until setting point is reached.</li>
-            <li>Remove from heat and let stand for 5 minutes.</li>
-            <li>Pour into warm sterile jars and seal.</li>
-        </ol>
+        <div class="instruction-list">
+            <% for (String instruction : rs.getString("instructions").split("\\n")) { %>
+                <div class="instruction-item">
+                    <%= instruction %>
+                </div>
+            <% } %>
+        </div>
     </section>
-    
-    <%@ include file="Footer.jsp" %>
+
+    <!-- Video Section -->
+    <section class="video-section">
+        <% String videoUrl = rs.getString("youtubeLink"); %>
+        <% if (videoUrl != null && !videoUrl.trim().isEmpty()) { %>
+            <a href="<%= videoUrl %>" target="_blank" class="watch-video-button">Watch Recipe Video</a>
+        <% } else { %>
+            <p>No video available for this recipe.</p>
+        <% } %>
+    </section>
+
+<%
+            } else {
+                out.println("<h2>Recipe not found!</h2>");
+            }
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.println("<h2>Error loading recipe details.</h2>");
+        }
+    } else {
+        out.println("<h2>Invalid recipe ID!</h2>");
+    }
+%>
+
+<%@ include file="Footer.jsp" %>
+
 </body>
 </html>

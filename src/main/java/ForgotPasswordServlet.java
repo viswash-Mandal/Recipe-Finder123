@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
+import java.util.UUID;
 
 @WebServlet("/ForgotPasswordServlet")
 public class ForgotPasswordServlet extends HttpServlet {
@@ -27,15 +28,27 @@ public class ForgotPasswordServlet extends HttpServlet {
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Email exists, redirect to reset page (or send email in real scenario)
+                // Generate a unique token
+                String token = UUID.randomUUID().toString();
+
+                // Store token in database
+                String updateSql = "UPDATE users SET reset_token = ? WHERE email = ?";
+                stmt = conn.prepareStatement(updateSql);
+                stmt.setString(1, token);
+                stmt.setString(2, email);
+                stmt.executeUpdate();
+
+                // Send a reset password link (For now, just print it)
+                String resetLink = "http://localhost:8080/RecipeFinder/ResetPassword.jsp?token=" + token;
+                System.out.println("Reset Link: " + resetLink);
+
                 response.sendRedirect("Login.jsp?message=Password reset link sent to your email.");
             } else {
-                // Email does not exist
-                response.sendRedirect("ForgotPage.jsp?error=Email not found.");
+                response.sendRedirect("ForgetPage.jsp?error=Email not found.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("ForgotPage.jsp?error=Database error, please try again.");
+            response.sendRedirect("ForgetPage.jsp?error=Database error, please try again.");
         } finally {
             try { if (rs != null) rs.close(); } catch (SQLException e) {}
             try { if (stmt != null) stmt.close(); } catch (SQLException e) {}

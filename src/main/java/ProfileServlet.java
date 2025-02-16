@@ -1,9 +1,9 @@
+// ProfileServlet.java
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
-@MultipartConfig(maxFileSize = 16177215) // Limit file size to 16MB
+@MultipartConfig(maxFileSize = 16177215) 
 public class ProfileServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/RecipeFinder";
     private static final String DB_USER = "root";
@@ -22,7 +22,7 @@ public class ProfileServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("Login.jsp");
             return;
         }
 
@@ -33,23 +33,26 @@ public class ProfileServlet extends HttpServlet {
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
                  InputStream inputStream = filePart.getInputStream()) {
 
-                // Delete previous image if it exists
-                String deleteSQL = "DELETE FROM profile_images WHERE user_id = ?";
-                PreparedStatement deleteStmt = conn.prepareStatement(deleteSQL);
-                deleteStmt.setInt(1, userId);
-                deleteStmt.executeUpdate();
-
-                // Insert new image
-                String sql = "INSERT INTO profile_images (user_id, image) VALUES (?, ?)";
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setInt(1, userId);
-                stmt.setBlob(2, inputStream);
-                stmt.executeUpdate();
+                String checkSQL = "SELECT user_id FROM profile_images WHERE user_id = ?";
+                PreparedStatement checkStmt = conn.prepareStatement(checkSQL);
+                checkStmt.setInt(1, userId);
+                if (checkStmt.executeQuery().next()) {
+                    String updateSQL = "UPDATE profile_images SET image = ? WHERE user_id = ?";
+                    PreparedStatement updateStmt = conn.prepareStatement(updateSQL);
+                    updateStmt.setBlob(1, inputStream);
+                    updateStmt.setInt(2, userId);
+                    updateStmt.executeUpdate();
+                } else {
+                    String insertSQL = "INSERT INTO profile_images (user_id, image) VALUES (?, ?)";
+                    PreparedStatement insertStmt = conn.prepareStatement(insertSQL);
+                    insertStmt.setInt(1, userId);
+                    insertStmt.setBlob(2, inputStream);
+                    insertStmt.executeUpdate();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        response.sendRedirect("profile.jsp");
+        response.sendRedirect("Profile.jsp");
     }
 }
