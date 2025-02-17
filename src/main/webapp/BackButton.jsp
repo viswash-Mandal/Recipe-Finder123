@@ -13,6 +13,7 @@
 <style>
 	
     .back-arrow {
+    	position:fixed;
         text-align: left;
         padding: 20px;
         font-size: 22px;

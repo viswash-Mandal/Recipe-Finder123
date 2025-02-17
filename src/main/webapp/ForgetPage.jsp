@@ -11,7 +11,7 @@
     <style>
         body {
         	font-family: 'Capriola', sans-serif;
-            background-color: #f4f4f4;
+            background-image: url('forget.jpg');
             margin: 0;
             padding: 20px;
             display: flex;
@@ -21,6 +21,10 @@
             height:100vh;
             overflow:hidden;
             position: relative;
+            background-size: cover; /* Ensures the image covers the entire body */
+    		background-repeat: no-repeat; /* Prevents the image from repeating */
+    		background-position: center; /* Centers the image */
+    		background-attachment: fixed;
         }
         h3 {
             color: black;

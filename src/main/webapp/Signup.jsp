@@ -11,12 +11,17 @@
 
 <style>
     body {
-        font-family: 'Capriola', sans-serif;
-        background-color: #f2f2f2;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
+    font-family: 'Capriola', sans-serif;
+    background-image: url('Signup.jpeg');
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-size: cover; /* Ensures the image covers the entire body */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image */
+    background-attachment: fixed;
+}
+
 
     .back-arrow {
         text-align: left;

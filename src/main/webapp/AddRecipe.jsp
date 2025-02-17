@@ -8,36 +8,34 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+           body {
+    font-family: 'Capriola', sans-serif;
+    background-image: url('AddRecipe.jpg');
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-size: cover; /* Ensures the image covers the entire body */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image */
+    background-attachment: fixed;
+}
 
         h1 {
             text-align: center;
-            color: #333;
+            color: Black;
         }
 
 
-        .back-container a {
-            padding: 15px;
-            text-decoration: none;
-            color: black;
-            font-size: 22px;
-        }
 
         form {
             max-width: 650px;
             margin: 20px auto;
-            background: white;
+            background: transparent;
             padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
 
         label {
+        	color: black;
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
@@ -46,9 +44,10 @@
         input, select, textarea {
             width: 100%;
             padding: 10px;
+            background: transparent;
             margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid black;
+            border-radius: 8px;
         }
 
         textarea {
@@ -57,26 +56,22 @@
         }
 
         input[type="submit"] {
-            display: block;
-            width: 100%;
+            width: 25%;
             padding: 10px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            background-color: transparent;
+            color: black;
+            border: 1xp solid black;
+            border-radius: 10px;
             cursor: pointer;
         }
 
         input[type="submit"]:hover {
-            background-color: #218838;
+            background-color: white;
         }
     </style>
 </head>
 <body>
-
-    <div class="back-container">
-        <a href="AdminPanal.jsp"><i class="fas fa-arrow-left"></i></a>
-    </div>
+	<%@ include file="BackButton.jsp" %>
 
     <h1>Add Recipe</h1>
 <form action="AddRecipeServlet" method="post" enctype="multipart/form-data">
@@ -107,7 +102,7 @@
     <textarea name="instructions" id="instructions" required></textarea><br>
 
     <!-- Video Link (Now Supports Any Platform) -->
-    <label for="videoLink">Video Link (Optional - Any Platform):</label>
+    <label for="videoLink">Video Link:</label>
     <input type="text" name="videoLink" id="videoLink" placeholder="https://video-platform.com/video-id"><br>
 
     <input type="submit" value="Add Recipe">
