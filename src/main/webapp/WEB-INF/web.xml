@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
@@ -18,6 +17,16 @@
 
     <!-- Servlet Definitions -->
     <servlet>
+        <servlet-name>LoginServlet</servlet-name>
+        <servlet-class>LoginServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SignupServlet</servlet-name>
+        <servlet-class>SignupServlet</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SearchRecipeServlet</servlet-name>
         <servlet-class>servlet.SearchRecipeServlet</servlet-class>
     </servlet>
@@ -31,13 +40,23 @@
         <servlet-name>RecipesServlet</servlet-name>
         <servlet-class>servlet.RecipesServlet</servlet-class>
     </servlet>
-    
+
     <servlet>
-    	<servlet-name>ProfileServlet</servlet-name>
-    	<servlet-class>com.yourpackage.ProfileServlet</servlet-class>
-	</servlet>
+        <servlet-name>ProfileServlet</servlet-name>
+        <servlet-class>servlet.ProfileServlet</servlet-class>
+    </servlet>
 
     <!-- Servlet Mappings -->
+    <servlet-mapping>
+        <servlet-name>LoginServlet</servlet-name>
+        <url-pattern>/LoginServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SignupServlet</servlet-name>
+        <url-pattern>/SignupServlet</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>SearchRecipeServlet</servlet-name>
         <url-pattern>/SearchRecipeServlet</url-pattern>
@@ -52,11 +71,12 @@
         <servlet-name>RecipesServlet</servlet-name>
         <url-pattern>/Recipes</url-pattern>
     </servlet-mapping>
-	
-<servlet-mapping>
-    <servlet-name>ProfileServlet</servlet-name>
-    <url-pattern>/ProfileServlet</url-pattern>
-</servlet-mapping>
-	
-	
+
+    <servlet-mapping>
+        <servlet-name>ProfileServlet</servlet-name>
+        <url-pattern>/ProfileServlet</url-pattern>
+    </servlet-mapping>
+
+
+
 </web-app>

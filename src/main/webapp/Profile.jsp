@@ -48,13 +48,8 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background-color: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px auto;
-            font-size: 40px;
             object-fit: cover;
+            margin: 20px auto;
         }
 
         .username {
@@ -90,8 +85,8 @@
         }
         
         .menu-item a {
-        	text-decoration: none;
-        	color: black;
+            text-decoration: none;
+            color: black;
         }
     </style>
 </head>
@@ -102,16 +97,15 @@
 </div>
 
 <div class="container">
-<div class="profile-image">
-    <img src="ProfileImageServlet" alt="Profile Image" width="100" height="100" style="border-radius: 50%;">
-	<form action="ProfileServlet" method="post" enctype="multipart/form-data">
-        <label for="fileInput">
-            <i class="fas fa-camera" style="cursor: pointer;"></i>
-        </label>
-        <input type="file" name="profileImage" id="fileInput" style="display: none;" onchange="this.form.submit();">
-    </form>
-</div>
-
+    <div class="profile-image">
+        <img src="ProfileImageServlet" alt="Profile Image">
+        <form action="ProfileServlet" method="post" enctype="multipart/form-data">
+            <label for="fileInput">
+                <i class="fas fa-camera" style="cursor: pointer;"></i>
+            </label>
+            <input type="file" name="profileImage" id="fileInput" style="display: none;" onchange="this.form.submit();">
+        </form>
+    </div>
 
     <div class="username"><%= username %></div>
 

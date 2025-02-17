@@ -1,5 +1,5 @@
+package model;
 
-// ProfileImageServlet.java
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Connection;
@@ -37,9 +37,9 @@ public class ProfileImageServlet extends HttpServlet {
             if (rs.next() && rs.getBytes("image") != null) {
                 byte[] imageData = rs.getBytes("image");
                 response.setContentType("image/jpeg");
-                OutputStream os = response.getOutputStream();
-                os.write(imageData);
-                os.close();
+                try (OutputStream os = response.getOutputStream()) {
+                    os.write(imageData);
+                }
             } else {
                 response.sendRedirect("default_profile_image.png");
             }
