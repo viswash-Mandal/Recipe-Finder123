@@ -12,16 +12,15 @@
 <style>
     body {
     font-family: 'Capriola', sans-serif;
-    background-image: url('Signup.jpeg');
+    //background-image: url('Signup.jpeg');
     margin: 0;
     padding: 0;
     text-align: center;
-    background-size: cover; /* Ensures the image covers the entire body */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
-    background-position: center; /* Centers the image */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
     background-attachment: fixed;
 }
-
 
     .back-arrow {
         text-align: left;
@@ -62,15 +61,6 @@
         display: block;
         margin-left: auto;
         margin-right: auto;
-    }
-
-    select {
-        padding: 15px;
-        border: 1px solid #ccc;
-        border-radius: 20px;
-        font-size: 18px;
-        margin-bottom: 12px;
-        text-align: center;
     }
 
     button {
@@ -116,10 +106,6 @@
         <input type="text" name="username" placeholder="Username" required>
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
-        <select name="role" required>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-        </select>
         <button type="submit">Sign up</button>
     </form>
 

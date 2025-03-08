@@ -57,7 +57,9 @@
         for (Recipe recipe : recipes) {
     %>
         <div class="recipe">
-            <img src="<%= recipe.getImage() %>" alt="<%= recipe.getName() %>">
+            <img src="uploads/images/<%= recipe.getImage() %>" 
+                 alt="<%= recipe.getName() %>" 
+                 onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
             <p><%= recipe.getName() %></p>
             <a href="RecipeDetails.jsp?id=<%= recipe.getId() %>">View Recipe</a>
         </div>

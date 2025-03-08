@@ -24,52 +24,53 @@ public class LoginServlet extends HttpServlet {
         ResultSet rs = null;
 
         try {
-            // Load MySQL JDBC Driver
+            // **Admin Login Check (Before DB Query)**
+            if ("kalu@admin.com".equalsIgnoreCase(usernameOrEmail) && "123456".equals(password)) {
+                HttpSession session = request.getSession();
+                session.setAttribute("userId", 0);  // Admin does not exist in DB, so set a default ID
+                session.setAttribute("username", "Admin");
+                session.setAttribute("role", "admin");
+
+                session.setMaxInactiveInterval(30 * 60); // 30-minute session timeout
+                response.sendRedirect("AdminDashboard.jsp"); // Redirect Admin
+                return; // ✅ **Exit method to prevent unnecessary DB query**
+            }
+
+            // **Database Connection**
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");
 
-            // SQL Query to find user by email or username and match password
-            String sql = "SELECT id, username, role FROM users WHERE (email = ? OR username = ?) AND password = ?";
+            // **SQL Query for Regular Users**
+            String sql = "SELECT id, username FROM Users WHERE (email = ? OR username = ?) AND password = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, usernameOrEmail);
             stmt.setString(2, usernameOrEmail);
-            stmt.setString(3, password); // ⚠️ Password stored as plain text
+            stmt.setString(3, password); // ⚠️ Plaintext password - Consider hashing!
 
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // ✅ User authenticated, store details in session
+                // **User Found - Store in Session**
                 HttpSession session = request.getSession();
-                int userId = rs.getInt("id"); // Step 2: Store `userId`
-                String username = rs.getString("username");
-                String role = rs.getString("role");
+                session.setAttribute("userId", rs.getInt("id"));
+                session.setAttribute("username", rs.getString("username"));
+                session.setAttribute("role", "user");  // Regular users have no role column in DB
 
-                session.setAttribute("userId", userId); // Step 2: Ensure `userId` is set
-                session.setAttribute("username", username);
-                session.setAttribute("role", role);
-
-                // Step 4: Set session timeout and enable cookies
-                session.setMaxInactiveInterval(30 * 60); // 30 minutes timeout
-                response.addCookie(new jakarta.servlet.http.Cookie("JSESSIONID", session.getId()));
-
-                // 🔥 Redirect based on role
-                if ("admin".equalsIgnoreCase(role)) {
-                    response.sendRedirect("AdminPanal.jsp");
-                } else {
-                    response.sendRedirect("HomePage.jsp");
-                }
+                session.setMaxInactiveInterval(30 * 60); // 30-minute session timeout
+                response.sendRedirect("Home.jsp"); // Redirect User
             } else {
-                // ❌ Invalid login
+                // **Invalid Login**
                 response.sendRedirect("Login.jsp?error=Invalid username or password.");
             }
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             response.sendRedirect("Login.jsp?error=Database error, please try again.");
         } finally {
-            // Close resources
+            // **Close Database Resources**
             try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (stmt != null) stmt.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
+
 }

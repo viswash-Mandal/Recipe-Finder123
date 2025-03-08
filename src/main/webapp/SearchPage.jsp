@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="jakarta.servlet.http.*, jakarta.servlet.*" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Search</title>
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Capriola&display=swap" rel="stylesheet">
     <style>
         body {
@@ -27,10 +28,6 @@
             gap: 20px;
         }
 
-        h1 i {
-            cursor: pointer;
-        }
-
         .container {
             width: 90%;
             max-width: 1500px;
@@ -42,7 +39,6 @@
         }
 
         .search-box {
-            display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 20px;
@@ -82,14 +78,32 @@
             gap: 15px;
         }
 
-        .recipe-card {
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            cursor: pointer;
-        }
+@keyframes floatAnimation {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+.recipe-card {
+    background: #fff;
+    padding: 35px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+}
+
+.recipe-card.float {
+    animation: floatAnimation 1s infinite ease-in-out;
+}
+
+
+
 
         .recipe-card img {
             width: 100%;
@@ -100,60 +114,107 @@
 </head>
 <body>
 
-<h1>
-    <i class="fas fa-arrow-left" onclick="history.back()"></i> Search Your Recipe
-</h1>
+<h1>🔍 Search Your Recipe</h1>
 
 <div class="container">
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Search recipes...">
-        <button onclick="searchRecipe()">Search</button>
+        <form method="post">
+            <input type="text" name="query" placeholder="Search recipes..." value="<%= request.getParameter("query") != null ? request.getParameter("query") : "" %>">
+            <button type="submit">Search</button>
+        </form>
     </div>
 
     <p class="section-title">Search Results</p>
-    <div class="recipe-grid" id="searchResults"></div>
+    <div class="recipe-grid">
+    <%
+        String query = request.getParameter("query");
+        boolean isSearchActive = query != null && !query.trim().isEmpty();
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");
+
+            // Check if the searched recipe exists in the database
+            String sql = isSearchActive 
+                ? "SELECT id, name, category, image FROM recipes WHERE LOWER(name) LIKE LOWER(?)"
+                : "SELECT id, name, category, image FROM recipes";
+
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            if (isSearchActive) {
+                stmt.setString(1, "%" + query + "%");
+            }
+
+            ResultSet rs = stmt.executeQuery();
+
+            boolean hasResults = false;
+            while (rs.next()) {
+                hasResults = true;
+    %>
+                <div class="recipe-card">
+                    <img src="uploads/images/<%= rs.getString("image") %>" 
+                        alt="<%= rs.getString("name") %>" 
+                        onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
+
+                    <h3><%= rs.getString("name") %></h3>
+                    <p>Category: <%= rs.getString("category") %></p>
+                </div>
+    <%
+            }
+
+            // If no results are found and a search was performed, insert the query into missing_recipes
+            if (!hasResults && isSearchActive) {
+                String checkMissingQuery = "SELECT id FROM missing_recipes WHERE query = ?";
+                PreparedStatement checkStmt = conn.prepareStatement(checkMissingQuery);
+                checkStmt.setString(1, query);
+                ResultSet missingRs = checkStmt.executeQuery();
+
+                if (missingRs.next()) {
+                    // If the search term already exists, increment the search_count
+                    String updateQuery = "UPDATE missing_recipes SET search_count = search_count + 1, last_searched = CURRENT_TIMESTAMP WHERE id = ?";
+                    PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+                    updateStmt.setInt(1, missingRs.getInt("id"));
+                    updateStmt.executeUpdate();
+                } else {
+                    // If the search term doesn't exist, insert a new record
+                    String insertQuery = "INSERT INTO missing_recipes (query) VALUES (?)";
+                    PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
+                    insertStmt.setString(1, query);
+                    insertStmt.executeUpdate();
+                }
+
+                out.println("<p style='text-align:center; font-size:18px;'>No recipes found. Try a different keyword!</p>");
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            out.println("<p style='color:red;'>Error: " + e.getMessage() + "</p>");
+        }
+    %>
+    </div>
 </div>
 
+<%@ include file="Footer.jsp" %>
 <script>
-function searchRecipe() {
-    let query = document.getElementById("searchInput").value.trim();
-    if (!query) {
-        alert("Please enter a search term.");
-        return;
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        let hoverTimeout;
 
-    const results = document.getElementById("searchResults");
-    results.innerHTML = "";
+        document.querySelectorAll(".recipe-card").forEach(card => {
+            card.addEventListener("mouseenter", function () {
+                hoverTimeout = setTimeout(() => {
+                    card.classList.add("float");
+                }, 1000); // 1 second delay before starting animation
+            });
 
-    fetch(`SearchServlet?query=${query}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                data.forEach(meal => {
-                    const card = document.createElement("div");
-                    card.classList.add("recipe-card");
-                    card.innerHTML = `
-                        <img src="${meal.image}" alt="${meal.name}">
-                        <h3>${meal.name}</h3>
-                        <p>Category: ${meal.category}</p>
-                    `;
-                    card.onclick = () => {
-                        window.location.href = `RecipeDetails.jsp?recipeId=${meal.id}`;
-                    };
-                    results.appendChild(card);
-                });
-            } else {
-                results.innerHTML = "<p style='text-align:center; font-size:18px;'>No recipes found. Try a different keyword!</p>";
-            }
-        })
-        .catch(error => {
-            console.error("Error fetching data:", error);
+            card.addEventListener("mouseleave", function () {
+                clearTimeout(hoverTimeout);
+                card.classList.remove("float");
+            });
         });
-}
-
+    });
 </script>
-
-<%@ include file= "Footer.jsp" %>
 
 </body>
 </html>

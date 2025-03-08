@@ -26,27 +26,32 @@ public class SignUpServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        // Determine role based on email domain
-        String role = email.endsWith("@admin.com") ? "admin" : "user";
+        // Default Admin Credentials (No need to sign up as admin)
+        String defaultAdminEmail = "kalu@admin.com";
+        String defaultAdminPassword = "123456";
+
+        // Prevent users from signing up as admin
+        if (email.equalsIgnoreCase(defaultAdminEmail)) {
+            response.sendRedirect("Signup.jsp?error=Admin account cannot be created manually.");
+            return;
+        }
 
         Connection con = null;
         PreparedStatement ps = null;
 
         try {
-
             // Database connection setup
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");
 
             // SQL query to insert new user
-            String sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
-            ps = con.prepareStatement(sql); // Fixed variable name
+            String sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, 'user')";
+            ps = con.prepareStatement(sql);
 
             // Set Parameters
             ps.setString(1, username);
             ps.setString(2, email);
-            ps.setString(3, password); // Store hashed password
-            ps.setString(4, role);
+            ps.setString(3, password); // Consider hashing this password before storing
 
             int rowsInserted = ps.executeUpdate();
             if (rowsInserted > 0) {

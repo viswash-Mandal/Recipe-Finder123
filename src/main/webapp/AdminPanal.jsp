@@ -160,6 +160,12 @@
             text-align: center;
             border-radius: 10px;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .card i {
+            font-size: 24px;
+            margin-bottom: 10px;
         }
 
         .logout {
@@ -173,8 +179,39 @@
             margin-top: auto;
         }
 
-        .chart-container {
-            display: none; /* Hides the chart container */
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
         }
     </style>
 </head>
@@ -182,38 +219,62 @@
     <div class="container">
         <div class="sidebar">
             <h2>DashBoard</h2>
-            <button>
-                <i class="fas fa-tachometer-alt"></i> <!-- Dashboard Icon -->
-                <a href="AdminPanal.jsp">Dashboard</a>
-            </button>
-            <button>
-                <i class="fas fa-plus-circle"></i> <!-- Add Recipe Icon -->
-                <a href="AddRecipe.jsp">Add Recipes</a>
-            </button>
-            <button>
-                <i class="fas fa-list-ul"></i> <!-- Recipe List Icon -->
-                <a href="RecipeList.jsp">List of all Recipes</a>
-            </button>
+            <button><i class="fas fa-tachometer-alt"></i><a href="AdminPanal.jsp">Dashboard</a></button>
+            <button><i class="fas fa-plus-circle"></i><a href="AddRecipe.jsp">Add Recipes</a></button>
+            <button><i class="fas fa-list-ul"></i><a href="RecipeList.jsp">List of all Recipes</a></button>
             <form action="Login.jsp" method="post">
                 <input type="submit" value="LogOut" class="logout">
             </form>
         </div>
-
         <div class="dashboard">
             <h1>DashBoard</h1>
             <div class="cards">
-                <div class="card"><h3>Vegetarian</h3><p><%= vegetarianCount %></p></div>
-                <div class="card"><h3>Non-Vegetarian</h3><p><%= nonVegetarianCount %></p></div>
-                <div class="card"><h3>Baking</h3><p><%= bakingCount %></p></div>
-                <div class="card"><h3>Party</h3><p><%= partyCount %></p></div>
-                <div class="card"><h3>Salad</h3><p><%= saladCount %></p></div>
-                <div class="card"><h3>Desserts</h3><p><%= dessertsCount %></p></div>
-                <div class="card"><h3>Soup</h3><p><%= soupCount %></p></div>
-                <div class="card"><h3>Healthy</h3><p><%= healthyCount %></p></div>
-                <div class="card"><h3>Sweets</h3><p><%= sweetsCount %></p></div>
-                <div class="card"><h3>No. of Users</h3><p><%= userCount %></p></div> <!-- New Card for No. of Users -->
+                <div class="card"><i class="fas fa-carrot"></i><h3>Vegetarian</h3><p><%= vegetarianCount %></p></div>
+                <div class="card"><i class="fas fa-drumstick-bite"></i><h3>Non-Vegetarian</h3><p><%= nonVegetarianCount %></p></div>
+                <div class="card"><i class="fas fa-bread-slice"></i><h3>Baking</h3><p><%= bakingCount %></p></div>
+                <div class="card"><i class="fas fa-glass-cheers"></i><h3>Party</h3><p><%= partyCount %></p></div>
+                <div class="card"><i class="fas fa-leaf"></i><h3>Salad</h3><p><%= saladCount %></p></div>
+                <div class="card"><i class="fas fa-ice-cream"></i><h3>Desserts</h3><p><%= dessertsCount %></p></div>
+                <div class="card"><i class="fas fa-hotdog"></i><h3>Soup</h3><p><%= soupCount %></p></div>
+                <div class="card"><i class="fas fa-apple-alt"></i><h3>Healthy</h3><p><%= healthyCount %></p></div>
+                <div class="card"><i class="fas fa-cookie"></i><h3>Sweets</h3><p><%= sweetsCount %></p></div>
+                <div class="card" onclick="showSearchedRecipes()"><i class="fas fa-search"></i><h3>Missing-Recipes</h3><p>View List</p></div>
             </div>
         </div>
     </div>
+
+    <!-- Modal for Searched Recipes -->
+    <div id="searchedRecipesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Searched Recipes</h2>
+            <div id="searchedRecipesList"></div>
+        </div>
+    </div>
+
+    <script>
+        function showSearchedRecipes() {
+            // Fetch the searched recipes from the server
+            fetch('GetSearchedRecipes.jsp')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('searchedRecipesList').innerHTML = data;
+                    document.getElementById('searchedRecipesModal').style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching searched recipes:', error));
+        }
+
+        function closeModal() {
+            document.getElementById('searchedRecipesModal').style.display = 'none';
+        }
+
+        // Close the modal if the user clicks outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById('searchedRecipesModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

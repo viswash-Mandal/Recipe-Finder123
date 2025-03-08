@@ -1,176 +1,234 @@
-<%@ page import="java.util.List" %>
-<%@ page import="model.Recipe" %> 
+<%@ page import="java.sql.*" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>List of Recipes</title>
+    <title>Recipe List</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             text-align: center;
-            margin: 0;
-            padding: 0;
         }
 
         .container {
-            max-width: auto;
+        	
+        	border-radius:1px solid black;
+            max-width: 800px;
             margin: auto;
             padding: 20px;
         }
-
-        .search-box {
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            align-items: center;
-        }
-
-        .search-box input {
-        	background-color: transparent;
-            padding: 8px;
-            width: 70%;
-            border-radius: 10px;
-            border: 1px solid black;
-        }
-
-        .search-box button {
-        	background-color: transparent;
-        	color: black;
+        
+        .container1 {
         	border: 1px solid black;
-            padding: 8px 15px;
+        	border-radius: 10px;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            background: transparent;
+            background: white;
             border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            color: #333;
-        }
-
-        .delete-icon {
-            color: red;
-        }
-
-        .icon-btn:hover {
-            opacity: 0.7;
-        }
-
-        .back-arrow {
-            text-align: left;
-            padding: 20px;
-            font-size: 22px;
-        }
-
-        .back-arrow a {
-            text-decoration: none;
+        th {
             color: black;
         }
 
-        .back-arrow a:hover {
-            color: #555;
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+        	background: transparent;
+            padding: 8px;
+            width: 60%;
+            border-radius: 10px;
+            border: 1px solid black;
+        }
+
+        .search-box button {
+            padding: 8px 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            background-color: white;
+            color: black;
+            border: 1px solid black;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background-color: transparent;
+        }
+
+        .btn-action {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .btn-edit {
+            color: #ffc107;
+        }
+
+        .btn-delete {
+            color: #dc3545;
+        }
+
+        .btn-edit:hover {
+            color: #d39e00;
+        }
+
+        .btn-delete:hover {
+            color: #a71d2a;
         }
     </style>
 </head>
 <body>
 
-<!-- Back Arrow -->
-<div class="back-arrow">
-    <a href="AdminPanal.jsp"><i class="fas fa-arrow-left"></i></a>
+<div class="container">
+    <h2>Recipe List</h2>
 </div>
 
+<!-- Search Box Container -->
 <div class="container">
-    <!-- Search Box -->
     <div class="search-box">
-        <form onsubmit="event.preventDefault(); searchRecipes();">
-            <input type="text" id="searchInput" name="query" placeholder="Search recipe..." required>
-            <button type="submit" class="btn btn-primary">Search</button>
+        <form method="GET" action="RecipeList.jsp">
+            <input type="text" name="query" placeholder="Search recipe..." 
+                   value="<%= request.getParameter("query") != null ? request.getParameter("query") : "" %>">
+            <button type="submit">Search</button>
         </form>
     </div>
+</div>
 
-    <!-- Recipe Table -->
-    <table id="recipeTable">
-        <tr>
-            <th>Name</th>
-            <th>Edit</th>
-            <th>Delete</th>
-        </tr>
-        <tbody id="recipeTableBody">
-            <%-- Sample Data --%>
+<!-- Recipe Table Container -->
+<div class="container1">
+    <table>
+        <thead>
             <tr>
-                <td>Spaghetti Bolognese</td>
-                <td><button class="icon-btn" onclick="editRecipe(1)"><i class="fas fa-edit"></i></button></td>
-                <td><button class="icon-btn delete-icon" onclick="confirmDelete(1)"><i class="fas fa-trash-alt"></i></button></td>
+                <th>Recipe Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
-            <tr>
-                <td>Grilled Chicken Salad</td>
-                <td><button class="icon-btn" onclick="editRecipe(2)"><i class="fas fa-edit"></i></button></td>
-                <td><button class="icon-btn delete-icon" onclick="confirmDelete(2)"><i class="fas fa-trash-alt"></i></button></td>
-            </tr>
-            <tr>
-                <td>Chocolate Cake</td>
-                <td><button class="icon-btn" onclick="editRecipe(3)"><i class="fas fa-edit"></i></button></td>
-                <td><button class="icon-btn delete-icon" onclick="confirmDelete(3)"><i class="fas fa-trash-alt"></i></button></td>
-            </tr>
+        </thead>
+        <tbody>
+            <%
+                String searchQuery = request.getParameter("query");
+                if (searchQuery == null) {
+                    searchQuery = "";
+                }
+
+                Connection conn = null;
+                PreparedStatement stmt = null;
+                ResultSet rs = null;
+
+                try {
+                    // Database Connection
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");
+
+                    // SQL Query to fetch only the 'name' column
+                    String sql = "SELECT id, name FROM Recipes";
+                    if (!searchQuery.trim().isEmpty()) {
+                        sql = "SELECT id, name FROM Recipes WHERE name LIKE ?";
+                        stmt = conn.prepareStatement(sql);
+                        stmt.setString(1, "%" + searchQuery + "%");
+                    } else {
+                        stmt = conn.prepareStatement(sql);
+                    }
+
+                    // Execute Query
+                    rs = stmt.executeQuery();
+                    boolean hasResults = false;
+                    
+                    while (rs.next()) {
+                        hasResults = true;
+                        int recipeId = rs.getInt("id");
+                        String recipeName = rs.getString("name");
+            %>
+                        <tr>
+                            <td><%= recipeName %></td>
+                            <td>
+                                <!-- Edit Button -->
+                                <a href="UpdateRecipe.jsp?id=<%= recipeId %>" class="btn-action btn-edit">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <!-- Delete Button (Triggers Modal) -->
+                                <button type="button" class="btn-action btn-delete" 
+                                        onclick="showDeleteModal(<%= recipeId %>, '<%= recipeName %>')">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+            <%
+                    }
+                    
+                    if (!hasResults) {
+            %>
+                        <tr>
+                            <td colspan="3">No recipes found.</td>
+                        </tr>
+            <%
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (rs != null) rs.close();
+                    if (stmt != null) stmt.close();
+                    if (conn != null) conn.close();
+                }
+            %>
         </tbody>
     </table>
 </div>
 
+<!-- DELETE CONFIRMATION MODAL -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="recipeName"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" method="POST" action="deleteRecipe.jsp">
+                    <input type="hidden" name="id" id="deleteRecipeId">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-function searchRecipes() {
-    let query = document.getElementById("searchInput").value;
-
-    fetch("RecipeListServlet?query=" + query)
-        .then(response => response.json())
-        .then(data => {
-            let tableBody = document.getElementById("recipeTableBody");
-            tableBody.innerHTML = ""; // Clear previous results
-
-            if (data.length === 0) {
-                tableBody.innerHTML = "<tr><td colspan='3'>No recipes found.</td></tr>";
-                return;
-            }
-
-            data.forEach(recipe => {
-                let row = `<tr>
-                    <td>${recipe.name}</td>
-                    <td><button class="icon-btn" onclick="editRecipe(${recipe.id})"><i class="fas fa-edit"></i></button></td>
-                    <td><button class="icon-btn delete-icon" onclick="confirmDelete(${recipe.id})"><i class="fas fa-trash-alt"></i></button></td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            });
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-function editRecipe(id) {
-    window.location.href = `UpdateRecipe.jsp?id=${id}`;
-}
-
-function confirmDelete(id) {
-    if (confirm("Are you sure you want to delete this recipe?")) {
-        window.location.href = `DeleteRecipeServlet?id=${id}`;
+    function showDeleteModal(recipeId, recipeName) {
+        document.getElementById("recipeName").textContent = recipeName;
+        document.getElementById("deleteRecipeId").value = recipeId;
+        var deleteModal = new bootstrap.Modal(document.getElementById("deleteModal"));
+        deleteModal.show();
     }
-}
 </script>
 
 </body>

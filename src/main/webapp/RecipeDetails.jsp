@@ -79,6 +79,7 @@
     }
 
     .ingredient-container {
+    	gap: 5px;
         display: flex;
         flex-direction: column;
     }

@@ -12,7 +12,7 @@
 <style>
  body {
     font-family: 'Capriola', sans-serif;
-    background-image: url('login.jpg');
+    //background-image: url('login.jpg');
     margin: 0;
     padding: 0;
     text-align: center;
@@ -148,9 +148,6 @@
         <div class="options">
             <div class="remember">
                 <input type="checkbox" name="rememberMe"> Remember Me
-            </div>
-            <div class="forgot-password">
-                <a href="ForgetPage.jsp">Forget Password?</a>
             </div>
         </div>
 

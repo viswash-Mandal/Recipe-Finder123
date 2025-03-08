@@ -20,6 +20,18 @@
     background-attachment: fixed;
 }
 
+    .back-arrow {
+    	position:fixed;
+        text-align: left;
+        padding: 20px;
+        font-size: 22px;
+    }
+
+    .back-arrow a {
+        text-decoration: none;
+        color: black;
+    }
+
         h1 {
             text-align: center;
             color: Black;
@@ -44,7 +56,6 @@
         input, select, textarea {
             width: 100%;
             padding: 10px;
-            background: transparent;
             margin-bottom: 20px;
             border: 1px solid black;
             border-radius: 8px;
@@ -58,10 +69,11 @@
         input[type="submit"] {
             width: 25%;
             padding: 10px;
-            background-color: transparent;
-            color: black;
-            border: 1xp solid black;
+            background-color: white;
+            font-weight:bold;
+            border:1px;
             border-radius: 10px;
+            color: black;
             cursor: pointer;
         }
 
@@ -71,7 +83,9 @@
     </style>
 </head>
 <body>
-	<%@ include file="BackButton.jsp" %>
+	<div class="back-arrow">
+    <a href="AdminPanal.jsp"><i class="fas fa-arrow-left"></i></a>
+</div>
 
     <h1>Add Recipe</h1>
 <form action="AddRecipeServlet" method="post" enctype="multipart/form-data">

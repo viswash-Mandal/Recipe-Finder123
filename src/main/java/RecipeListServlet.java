@@ -5,7 +5,7 @@
 //import java.sql.ResultSet;
 //import java.util.ArrayList;
 //import java.util.List;
-//import com.google.gson.Gson;
+//
 //import jakarta.servlet.ServletException;
 //import jakarta.servlet.annotation.WebServlet;
 //import jakarta.servlet.http.HttpServlet;
@@ -23,37 +23,29 @@
 //
 //    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //        List<Recipe> recipeList = new ArrayList<>();
-//        response.setContentType("application/json");
-//        response.setCharacterEncoding("UTF-8");
 //
 //        try {
 //            Class.forName("com.mysql.cj.jdbc.Driver");
 //            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
-//                String query = request.getParameter("query");
 //                String sql = "SELECT id, name FROM Recipes";
 //
-//                if (query != null && !query.trim().isEmpty()) {
-//                    sql = "SELECT id, name FROM Recipes WHERE name LIKE ?";
-//                }
-//
-//                try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//                    if (query != null && !query.trim().isEmpty()) {
-//                        pstmt.setString(1, "%" + query + "%");
-//                    }
-//
-//                    try (ResultSet rs = pstmt.executeQuery()) {
-//                        while (rs.next()) {
-//                            Recipe recipe = new Recipe(rs.getInt("id"), rs.getString("name"));
-//                            recipeList.add(recipe);
-//                        }
+//                try (PreparedStatement pstmt = conn.prepareStatement(sql);
+//                     ResultSet rs = pstmt.executeQuery()) {
+//                    while (rs.next()) {
+//                        Recipe recipe = new Recipe();
+//                        recipe.setId(rs.getInt("id"));
+//                        recipe.setName(rs.getString("name"));
+//                        recipeList.add(recipe);
 //                    }
 //                }
 //            }
 //        } catch (Exception e) {
 //            e.printStackTrace();
+//            throw new ServletException(e);
 //        }
 //
-//        String json = new Gson().toJson(recipeList);
-//        response.getWriter().write(json);
+//        // Set the recipe list as a request attribute and forward to RecipeList.jsp
+//        request.setAttribute("recipeList", recipeList);
+//        request.getRequestDispatcher("RecipeList.jsp").forward(request, response);
 //    }
 //}
