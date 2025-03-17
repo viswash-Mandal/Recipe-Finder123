@@ -123,9 +123,7 @@
 </head>
 <body>
 
-<div class="back-arrow">
-    <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
-</div>
+
 
 <div class="container">
     <div class="sign">

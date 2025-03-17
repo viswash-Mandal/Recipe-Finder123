@@ -71,7 +71,7 @@ h2{
 <h2>Category</h2>
 	<div class="inspiration-container">
             <div class="category">
-                <img src="https://sukhis.com/app/uploads/2022/11/veggie-platter-1024x753.jpg" alt="Vegetarian Recipes">
+                <img src="https://files.mob-cdn.co.uk/collections/Healthy-Vegetarian-Recipes.jpg" alt="Vegetarian Recipes">
                 <div class="section-btn"><button><a href="RecipeServlet?category=Vegetarian">Vegetarian Recipes</a></button></div>
             </div>
             <div class="category">
@@ -95,7 +95,7 @@ h2{
             </div>
             <div class="category">
                 <img src="https://tb-static.uber.com/prod/image-proc/processed_images/8090beef6c8cd61a9c4c7ade90a08a91/445a4b2618e10f7db95d4f17a85b117d.jpeg" alt="Dessert Recipes">
-                <div class="section-btn"><button><a href="RecipeServlet?category=Dessert">Desserts Recipes</a></button></div>
+                <div class="section-btn"><button><a href="RecipeServlet?category=Desserts">Desserts Recipes</a></button></div>
             </div>
         </div>
         

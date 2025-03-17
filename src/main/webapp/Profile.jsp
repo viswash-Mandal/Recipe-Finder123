@@ -10,6 +10,9 @@
     String profileImage = (userSession != null && userSession.getAttribute("profileImage") != null) 
                         ? (String) userSession.getAttribute("profileImage") 
                         : "logo.png";
+
+    // Get the first letter of the username
+    String firstLetter = username.substring(0, 1).toUpperCase();
 %>
 
 <!DOCTYPE html>
@@ -44,12 +47,25 @@
             color: black;
         }
 
-        .profile-image img {
+        .profile-image {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            object-fit: cover;
+            background-color: #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #fff;
             margin: 20px auto;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .username {
@@ -92,20 +108,20 @@
 </head>
 <body>
 
-<div class="back-arrow">
-    <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
-</div>
-
 <div class="container">
     <div class="profile-image">
-        <img src="ProfileImageServlet" alt="Profile Image">
-        <form action="ProfileServlet" method="post" enctype="multipart/form-data">
-            <label for="fileInput">
-                <i class="fas fa-camera" style="cursor: pointer;"></i>
-            </label>
-            <input type="file" name="profileImage" id="fileInput" style="display: none;" onchange="this.form.submit();">
-        </form>
+        <% if (profileImage.equals("logo.png")) { %>
+            <div><%= firstLetter %></div>
+        <% } else { %>
+            <img src="ProfileImageServlet?userId=<%= userSession.getAttribute("userId") %>" 
+                 alt="Profile Image" onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
+        <% } %>
     </div>
+
+    <form action="ProfileServlet" method="post" enctype="multipart/form-data">
+
+        <input type="file" name="profileImage" id="fileInput" style="display: none;" onchange="this.form.submit();">
+    </form>
 
     <div class="username"><%= username %></div>
 

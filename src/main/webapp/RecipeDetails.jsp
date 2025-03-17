@@ -62,8 +62,8 @@
     }
 
     .recipe-image {
-        width: 450px;
-        height: 300px;
+        width: 300px; /* Updated to 45px */
+        height: 300px; /* Updated to 45px */
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
@@ -182,7 +182,9 @@
 
     <!-- Image Section -->
     <section class="image-section">
-        <img src="<%= rs.getString("image") %>" alt="<%= rs.getString("name") %>" class="recipe-image">
+        <img class="recipe-image" src="uploads/images/<%= rs.getString("image") %>" 
+                            alt="<%= rs.getString("name") %>" 
+                            onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
     </section>
 
     <!-- Ingredients Section -->

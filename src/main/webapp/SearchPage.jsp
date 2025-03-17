@@ -29,13 +29,9 @@
         }
 
         .container {
-            width: 90%;
             max-width: 1500px;
             margin: 20px auto;
             padding: 50px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .search-box {
@@ -74,41 +70,39 @@
 
         .recipe-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
         }
 
-@keyframes floatAnimation {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-5px); }
-    100% { transform: translateY(0px); }
-}
+        .recipe-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            width: 90%;
+            max-width: 320px;
+            margin: auto;
+            height: auto;
+        }
 
-.recipe-card {
-    background: #fff;
-    padding: 35px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-}
-
-.recipe-card:hover {
-    transform: translateY(-5px);
-}
-
-.recipe-card.float {
-    animation: floatAnimation 1s infinite ease-in-out;
-}
-
-
-
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
 
         .recipe-card img {
             width: 100%;
+            height: 200px;
             border-radius: 10px;
-            margin-bottom: 10px;
+            object-fit: cover;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
         }
     </style>
 </head>
@@ -134,7 +128,7 @@
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");
 
-            // Check if the searched recipe exists in the database
+            // Search for recipes
             String sql = isSearchActive 
                 ? "SELECT id, name, category, image FROM recipes WHERE LOWER(name) LIKE LOWER(?)"
                 : "SELECT id, name, category, image FROM recipes";
@@ -146,44 +140,43 @@
             }
 
             ResultSet rs = stmt.executeQuery();
-
             boolean hasResults = false;
+
             while (rs.next()) {
                 hasResults = true;
-    %>
-                <div class="recipe-card">
-                    <img src="uploads/images/<%= rs.getString("image") %>" 
-                        alt="<%= rs.getString("name") %>" 
-                        onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
+                int recipeId = rs.getInt("id");
 
-                    <h3><%= rs.getString("name") %></h3>
-                    <p>Category: <%= rs.getString("category") %></p>
-                </div>
-    <%
-            }
+                // ✅ Track the search in `search_activity`
+                String searchQuery = "SELECT search_count FROM search_activity WHERE recipe_id = ?";
+                PreparedStatement checkStmt = conn.prepareStatement(searchQuery);
+                checkStmt.setInt(1, recipeId);
+                ResultSet searchRs = checkStmt.executeQuery();
 
-            // If no results are found and a search was performed, insert the query into missing_recipes
-            if (!hasResults && isSearchActive) {
-                String checkMissingQuery = "SELECT id FROM missing_recipes WHERE query = ?";
-                PreparedStatement checkStmt = conn.prepareStatement(checkMissingQuery);
-                checkStmt.setString(1, query);
-                ResultSet missingRs = checkStmt.executeQuery();
-
-                if (missingRs.next()) {
-                    // If the search term already exists, increment the search_count
-                    String updateQuery = "UPDATE missing_recipes SET search_count = search_count + 1, last_searched = CURRENT_TIMESTAMP WHERE id = ?";
-                    PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
-                    updateStmt.setInt(1, missingRs.getInt("id"));
+                if (searchRs.next()) {
+                    // If recipe already searched, increase count
+                    String updateSearch = "UPDATE search_activity SET search_count = search_count + 1 WHERE recipe_id = ?";
+                    PreparedStatement updateStmt = conn.prepareStatement(updateSearch);
+                    updateStmt.setInt(1, recipeId);
                     updateStmt.executeUpdate();
                 } else {
-                    // If the search term doesn't exist, insert a new record
-                    String insertQuery = "INSERT INTO missing_recipes (query) VALUES (?)";
-                    PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
-                    insertStmt.setString(1, query);
+                    // Insert new search record
+                    String insertSearch = "INSERT INTO search_activity (recipe_id, search_count) VALUES (?, 1)";
+                    PreparedStatement insertStmt = conn.prepareStatement(insertSearch);
+                    insertStmt.setInt(1, recipeId);
                     insertStmt.executeUpdate();
                 }
+    %>
+                <a href="RecipeDetails.jsp?id=<%= recipeId %>">
+                    <div class="recipe-card">
+                        <img src="uploads/images/<%= rs.getString("image") %>" 
+                            alt="<%= rs.getString("name") %>" 
+                            onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
 
-                out.println("<p style='text-align:center; font-size:18px;'>No recipes found. Try a different keyword!</p>");
+                        <h3><%= rs.getString("name") %></h3>
+                        <p>Category: <%= rs.getString("category") %></p>
+                    </div>
+                </a>
+    <%
             }
 
             rs.close();
@@ -197,24 +190,6 @@
 </div>
 
 <%@ include file="Footer.jsp" %>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let hoverTimeout;
-
-        document.querySelectorAll(".recipe-card").forEach(card => {
-            card.addEventListener("mouseenter", function () {
-                hoverTimeout = setTimeout(() => {
-                    card.classList.add("float");
-                }, 1000); // 1 second delay before starting animation
-            });
-
-            card.addEventListener("mouseleave", function () {
-                clearTimeout(hoverTimeout);
-                card.classList.remove("float");
-            });
-        });
-    });
-</script>
 
 </body>
 </html>

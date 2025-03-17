@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("role", "admin");
 
                 session.setMaxInactiveInterval(30 * 60); // 30-minute session timeout
-                response.sendRedirect("AdminDashboard.jsp"); // Redirect Admin
+                response.sendRedirect("AdminPanal.jsp"); // Redirect Admin
                 return; // ✅ **Exit method to prevent unnecessary DB query**
             }
 
@@ -57,7 +57,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("role", "user");  // Regular users have no role column in DB
 
                 session.setMaxInactiveInterval(30 * 60); // 30-minute session timeout
-                response.sendRedirect("Home.jsp"); // Redirect User
+                response.sendRedirect("HomePage.jsp"); // Redirect User
             } else {
                 // **Invalid Login**
                 response.sendRedirect("Login.jsp?error=Invalid username or password.");

@@ -4,9 +4,10 @@
 <%
     HttpSession userSession = request.getSession(false);
     Object userId = (userSession != null) ? userSession.getAttribute("userId") : null;
-    
+    String successMessage = request.getParameter("success");
+    String errorMessage = request.getParameter("error");
+
     if (userId == null) {
-        out.println("<p style='color:red;'>Session Expired. Please log in again.</p>");
         response.sendRedirect("Login.jsp");
         return;
     }
@@ -31,7 +32,7 @@
             overflow: hidden;
         }
 
-        /* 1st Container - Back Button */
+        /* Back Button */
         .back-container {
             width: 100%;
             position: absolute;
@@ -45,18 +46,17 @@
             font-size: 22px;
         }
 
-        /* 2nd Container - Setting Title */
+        /* Setting Title */
         .setting-container {
-            margin-top: -15%; /* Reduced gap between back arrow and title */
+            margin-top: -15%;
             text-align: center;
         }
 
         h2 {
-            margin-left: -135vh;
             font-size: 30px;
         }
 
-        /* 3rd Container - Change Password Form */
+        /* Change Password Form */
         .main-container {
             width: 350px;
         }
@@ -86,35 +86,105 @@
         }
 
         .btn {
-            width: 60%; /* Increased width */
-            padding: 15px; /* Increased padding */
+            width: 60%;
+            padding: 15px;
             background-color: #007bff;
-            color: white; /* Changed text color to white */
+            color: white;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             font-size: 18px;
-            height: 50px; /* Increased height */
+            height: 50px;
         }
 
         .btn:hover {
             background-color: #0056b3;
         }
+
+        /* POPUP MODAL */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        .popup h4 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .popup.success {
+            border-left: 5px solid #28a745;
+        }
+
+        .popup.error {
+            border-left: 5px solid #dc3545;
+        }
+
+        .popup i {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .popup.success i {
+            color: #28a745;
+        }
+
+        .popup.error i {
+            color: #dc3545;
+        }
+
+        .popup button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .popup button:hover {
+            background: #0056b3;
+        }
+
+        /* Smooth Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -55%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1st Container - Back Button -->
+    <!-- Back Button -->
     <div class="back-container">
         <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
     </div> 
 
-    <!-- 2nd Container - Setting Title -->
+    <!-- Setting Title -->
     <div class="setting-container">
         <h2>Setting</h2>
     </div>
 
-    <!-- 3rd Container - Change Password Form -->
+    <!-- Change Password Form -->
     <div class="main-container">
         <h3>Change Password</h3>
         <form action="ChangePasswordServlet" method="post">
@@ -132,6 +202,35 @@
             </div>
         </form>
     </div>
+
+    <!-- Success Popup -->
+    <div class="popup success" id="successPopup">
+        <i class="fas fa-check-circle"></i>
+        <h4>Password Changed Successfully</h4>
+        <button onclick="closePopup('successPopup')">Close</button>
+    </div>
+
+    <!-- Error Popup -->
+    <div class="popup error" id="errorPopup">
+        <i class="fas fa-times-circle"></i>
+        <h4>Password Doesn't Match</h4>
+        <button onclick="closePopup('errorPopup')">Close</button>
+    </div>
+
+    <script>
+        function closePopup(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // Show popups if messages exist
+        <% if (successMessage != null) { %>
+            document.getElementById("successPopup").style.display = "block";
+        <% } %>
+
+        <% if (errorMessage != null) { %>
+            document.getElementById("errorPopup").style.display = "block";
+        <% } %>
+    </script>
 
 </body>
 </html>
