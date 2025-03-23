@@ -21,6 +21,10 @@
         height: 100vh;
     }
 
+    .container {
+        width: 100%;
+        max-width: 500px;
+    }
 
     .back-arrow {
         position: absolute;
@@ -80,13 +84,65 @@
     button:hover {
         box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
     }
+
+    /* Popup Styling */
+    .popup {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        font-size: 16px;
+        display: none;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        animation: fadeIn 0.5s, fadeOut 0.5s 3s;
+    }
+
+    .popup.success {
+        background-color: #28a745;
+    }
+
+    .popup.error {
+        background-color: #dc3545;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
 </style>
+
+<script>
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const popup = document.getElementById('popupMessage');
+
+        if (urlParams.get('message') === 'success') {
+            popup.innerText = "Message sent successfully!";
+            popup.classList.add("success");
+            popup.style.display = "block";
+        } else if (urlParams.get('message') === 'error') {
+            popup.innerText = "Failed to send message. Please try again.";
+            popup.classList.add("error");
+            popup.style.display = "block";
+        }
+
+        setTimeout(() => {
+            popup.style.display = "none";
+        }, 4000);
+    };
+</script>
+
 </head>
 <body>
-
-<div class="back-arrow">
-    <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
-</div>
 
 <div class="container">
     <h2>Contact / Support</h2>
@@ -98,6 +154,9 @@
         <button type="submit">Send</button>
     </form>
 </div>
+
+<!-- Popup Notification -->
+<div id="popupMessage" class="popup"></div>
 
 </body>
 </html>

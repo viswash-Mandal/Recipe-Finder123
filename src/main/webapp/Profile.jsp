@@ -104,6 +104,41 @@
             text-decoration: none;
             color: black;
         }
+        
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 10% auto;
+        padding: 20px;
+        width: 50%;
+        height: 66%;
+        border-radius: 10px;
+        position: relative;
+    }
+
+    .modal-content iframe {
+        width: 100%;
+        height: 90%;
+        border: none;
+    }
+
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 30px;
+        cursor: pointer;
+    }
     </style>
 </head>
 <body>
@@ -125,15 +160,40 @@
 
     <div class="username"><%= username %></div>
 
-    <div class="menu">
-        <div class="menu-item"><i class="fas fa-edit"></i><a href="EditName.jsp">Edit Name</a></div>
-        <div class="menu-item"><i class="fas fa-heart"></i><a href="Favorites.jsp">Favorites</a></div>
-        <div class="menu-item"><i class="fas fa-cog"></i><a href="ChangePassword.jsp">Settings</a></div>
-        <div class="menu-item"><i class="fas fa-bullseye"></i> <a href="Ourgoals.jsp">Our Goals</a></div>
-        <div class="menu-item"><i class="fas fa-info-circle"></i> <a href="About.jsp">About</a></div>
-        <div class="menu-item"><i class="fas fa-user-friends"></i> <a href="support.jsp">Support</a></div>
+<div class="menu">
+    <div class="menu-item" onclick="openModal('EditName.jsp')"><i class="fas fa-edit"></i><a href="#">Edit Name</a></div>
+    <div class="menu-item" ><i class="fas fa-heart"></i><a href="Favorites.jsp">Favorites</a></div>
+    <div class="menu-item" onclick="openModal('ChangePassword.jsp')"><i class="fas fa-cog"></i><a href="#">Settings</a></div>
+    <div class="menu-item" ><i class="fas fa-bullseye"></i> <a href="Ourgoals.jsp">Our Goals</a></div>
+    <div class="menu-item" ><i class="fas fa-info-circle"></i> <a href="About.jsp">About</a></div>
+    <div class="menu-item" onclick="openModal('support.jsp')"><i class="fas fa-user-friends"></i> <a href="#">Support</a></div>
+</div>
+<!-- Modal Structure -->
+<div id="contentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <iframe id="modalIframe" src="" frameborder="0"></iframe>
     </div>
 </div>
 
+</div>
+<script>
+    function openModal(pageUrl) {
+        document.getElementById("modalIframe").src = pageUrl;
+        document.getElementById("contentModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("contentModal").style.display = "none";
+        document.getElementById("modalIframe").src = "";
+    }
+
+    window.onclick = function(event) {
+        let modal = document.getElementById("contentModal");
+        if (event.target == modal) {
+            closeModal();
+        }
+    };
+</script>
 </body>
 </html>

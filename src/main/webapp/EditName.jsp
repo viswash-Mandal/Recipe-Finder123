@@ -19,7 +19,6 @@
     <style>
         body {
             font-family: 'Capriola', sans-serif;
-            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
             text-align: center;
@@ -105,10 +104,6 @@
     </style>
 </head>
 <body>
-
-<div class="back-arrow">
-    <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
-</div>
 
 <div class="container">
     <div class="profile-image">

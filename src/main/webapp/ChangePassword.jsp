@@ -22,7 +22,6 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -174,10 +173,6 @@
 </head>
 <body>
 
-    <!-- Back Button -->
-    <div class="back-container">
-        <a href="javascript:history.back();"><i class="fas fa-arrow-left"></i></a>
-    </div> 
 
     <!-- Setting Title -->
     <div class="setting-container">

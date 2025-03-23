@@ -19,9 +19,7 @@
             max-width: 600px;
             margin: 50px auto;
             padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
         }
 
         h2 {
@@ -71,26 +69,39 @@
 <body>
 
 <div class="container">
-    <div class="back-container">
-        <a href="adminPanel.jsp"><i class="fas fa-arrow-left"></i> Back</a>
-    </div>
 
-    <h2>Update Recipe</h2>
 
-    <%
+    <% 
         String recipeId = request.getParameter("id");
         String name = "", ingredients = "", instructions = "", videoLink = "", image = "";
-
+        
         if (recipeId != null) {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");
-
+                
+                if ("POST".equalsIgnoreCase(request.getMethod())) {
+                    name = request.getParameter("name");
+                    ingredients = request.getParameter("ingredients");
+                    instructions = request.getParameter("instructions");
+                    videoLink = request.getParameter("videoLink");
+                    
+                    String updateSql = "UPDATE Recipes SET name=?, ingredients=?, instructions=?, video_link=? WHERE id=?";
+                    PreparedStatement updateStmt = conn.prepareStatement(updateSql);
+                    updateStmt.setString(1, name);
+                    updateStmt.setString(2, ingredients);
+                    updateStmt.setString(3, instructions);
+                    updateStmt.setString(4, videoLink);
+                    updateStmt.setInt(5, Integer.parseInt(recipeId));
+                    updateStmt.executeUpdate();
+                    updateStmt.close();
+                }
+                
                 String sql = "SELECT * FROM Recipes WHERE id = ?";
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 stmt.setInt(1, Integer.parseInt(recipeId));
                 ResultSet rs = stmt.executeQuery();
-
+                
                 if (rs.next()) {
                     name = rs.getString("name");
                     ingredients = rs.getString("ingredients");
@@ -98,7 +109,7 @@
                     videoLink = rs.getString("video_link");
                     image = rs.getString("image");
                 }
-
+                
                 rs.close();
                 stmt.close();
                 conn.close();
@@ -108,6 +119,7 @@
         }
     %>
 
+
     <form action="UpdateRecipeServlet" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<%= recipeId %>">
 
@@ -116,15 +128,19 @@
             <input type="text" id="recipeName" name="name" value="<%= name %>" required>
         </div>
 
-        <div class="form-group">
-            <label for="recipeImage">Current Image:</label>
-            <br>
-            <% if (image != null && !image.isEmpty()) { %>
-                <img src="uploads/<%= image %>" alt="Recipe Image" style="width:100px; height:100px;">
-            <% } else { %>
-                <p>No image available</p>
-            <% } %>
-        </div>
+<div class="form-group">
+    <label for="recipeImage">Current Image:</label>
+    <br>
+    <% if (image != null && !image.isEmpty()) { %>
+        <img src="uploads/images/<%= image %>" 
+             alt="<%= name %>" 
+             onerror="this.onerror=null; this.src='uploads/images/default.jpg';" 
+             style="width:100px; height:100px;">
+    <% } else { %>
+        <p>No image available</p>
+    <% } %>
+</div>
+
 
         <div class="form-group">
             <label for="recipeImage">Choose New Image:</label>
