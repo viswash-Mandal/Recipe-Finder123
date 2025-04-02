@@ -9,7 +9,7 @@
     <style>
         body {
             font-family: 'Capriola', sans-serif;
-            background-image: url('AddRecipe.jpg');
+            background: linear-gradient(135deg, #ffffff 0%, #e9cacb 100%);
             margin: 0;
             padding: 0;
             text-align: center;

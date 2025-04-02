@@ -1,26 +1,20 @@
 package model;
 
-
 import java.io.IOException;
-
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-
+import java.sql.ResultSet;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
 
-
-@WebServlet("/model/ProfileServlet") // Use a different URL
-@MultipartConfig(maxFileSize = 16177215)  // 16MB file size limit
+@WebServlet("/model/ProfileServlet")
 public class ProfileServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userId") == null) {
             response.sendRedirect("login.jsp");
@@ -28,26 +22,26 @@ public class ProfileServlet extends HttpServlet {
         }
 
         int userId = (int) session.getAttribute("userId");
-        Part filePart = request.getPart("profileImage");
+        String username = "Guest";
 
-        if (filePart != null && filePart.getSize() > 0) {
-            try (InputStream inputStream = filePart.getInputStream();
-                 Connection conn = DatabaseConnection.getConnection()) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String sql = "SELECT username FROM users WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
 
-                // Insert or update the profile image
-                String sql = "INSERT INTO profile_images (user_id, image) VALUES (?, ?) " +
-                             "ON DUPLICATE KEY UPDATE image = VALUES(image)";
-                
-                try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                    stmt.setInt(1, userId);
-                    stmt.setBlob(2, inputStream);
-                    stmt.executeUpdate();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                response.getWriter().println("Error: " + e.getMessage());  // Debugging output
+            if (rs.next()) {
+                username = rs.getString("username");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        session.setAttribute("username", username);
+        Cookie usernameCookie = new Cookie("username", username);
+        usernameCookie.setMaxAge(60 * 60 * 24 * 7); // 1 week
+        response.addCookie(usernameCookie);
+        
         response.sendRedirect("Profile.jsp");
     }
 }

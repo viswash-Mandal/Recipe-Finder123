@@ -268,14 +268,24 @@
     }
 </style>
 </head>
-<body>
+
+<%
+    String savedEmail = "";
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("userEmail")) {
+                savedEmail = cookie.getValue();
+            }
+        }
+    }
+%>
 
 <div class="container">
     <div class="sign">
         <h3>Sign in to your account</h3>
     </div>
-    
-    <!-- Display error or success messages -->
+
     <% String error = request.getParameter("error");
        String success = request.getParameter("success");
        if (error != null) { %>
@@ -283,21 +293,20 @@
     <% } else if (success != null) { %>
            <p class="success"><%= success %></p>
     <% } %>
-    
+
     <form action="LoginServlet" method="post">
         <div class="form-group">
             <i class="fas fa-envelope"></i>
-            <input type="text" name="email" placeholder="Email" required>
+            <input type="text" name="email" placeholder="Email" value="<%= savedEmail %>" required>
         </div>
         <div class="form-group">
             <i class="fas fa-lock"></i>
             <input type="password" name="password" id="password" placeholder="Password" required>
-            
         </div>
-        
+
         <div class="options">
             <div class="remember">
-                <input type="checkbox" name="rememberMe" id="rememberMe">
+                <input type="checkbox" name="rememberMe" id="rememberMe" <%= savedEmail.isEmpty() ? "" : "checked" %>>
                 <label for="rememberMe">Remember Me</label>
             </div>
         </div>
@@ -309,23 +318,6 @@
         Don't have an account? <a href="Signup.jsp">Sign Up</a>
     </div>
 </div>
-
-<script>
-function togglePassword() {
-    const passwordInput = document.getElementById('password');
-    const toggleIcon = document.querySelector('.password-toggle');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleIcon.classList.remove('fa-eye');
-        toggleIcon.classList.add('fa-eye-slash');
-    } else {
-        passwordInput.type = 'password';
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye');
-    }
-}
-</script>
 
 </body>
 </html>

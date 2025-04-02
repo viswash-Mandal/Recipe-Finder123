@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="jakarta.servlet.http.HttpSession" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -144,12 +145,22 @@
 </head>
 <body>
 
+<%
+    // Get session and retrieve user email if logged in
+    HttpSession userSession = request.getSession(false);
+    String userEmail = "";
+
+    if (userSession != null && userSession.getAttribute("email") != null) {
+        userEmail = (String) userSession.getAttribute("email");
+    }
+%>
+
 <div class="container">
     <h2>Contact / Support</h2>
     <p>Tell us what you like, what you would like to see, bug reports and support questions are all welcome!</p>
 
     <form action="ContactServlet" method="post">
-        <input type="email" name="email" placeholder="Email" required>
+        <input type="email" name="email" value="<%= userEmail %>" placeholder="Email" required>
         <textarea name="comments" placeholder="Comments" required></textarea>
         <button type="submit">Send</button>
     </form>

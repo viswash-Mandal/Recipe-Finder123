@@ -134,13 +134,12 @@
     <% if (image != null && !image.isEmpty()) { %>
         <img src="uploads/images/<%= image %>" 
              alt="<%= name %>" 
-             onerror="this.onerror=null; this.src='uploads/images/default.jpg';" 
+             onerror="this.onerror=null; this.src='images/default.jpg';" 
              style="width:100px; height:100px;">
     <% } else { %>
-        <p>No image available</p>
+        <img src="images/default.jpg" alt="Default recipe image" style="width:100px; height:100px;">
     <% } %>
 </div>
-
 
         <div class="form-group">
             <label for="recipeImage">Choose New Image:</label>

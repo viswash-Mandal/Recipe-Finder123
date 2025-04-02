@@ -1,17 +1,37 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="jakarta.servlet.http.HttpSession" %>
+<%@ page import="jakarta.servlet.http.Cookie" %>
 
 <%
     HttpSession userSession = request.getSession(false);
-    String username = (userSession != null && userSession.getAttribute("username") != null) 
-                        ? (String) userSession.getAttribute("username") 
-                        : "Guest";
+    String username = "Guest";
+    String profileImage = "logo.png";
+    String userId = "";
 
-    String profileImage = (userSession != null && userSession.getAttribute("profileImage") != null) 
-                        ? (String) userSession.getAttribute("profileImage") 
-                        : "logo.png";
+    // Retrieve username & profile image from session
+    if (userSession != null) {
+        if (userSession.getAttribute("username") != null) {
+            username = (String) userSession.getAttribute("username");
+        }
+        if (userSession.getAttribute("profileImage") != null) {
+            profileImage = (String) userSession.getAttribute("profileImage");
+        }
+        if (userSession.getAttribute("userId") != null) {
+            userId = userSession.getAttribute("userId").toString(); // Fixed the type casting
+        }
+    } else {
+        // If session is null, check for cookies
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("savedUsername")) {
+                    username = cookie.getValue();
+                }
+            }
+        }
+    }
 
-    // Get the first letter of the username
+    // Get the first letter of the username for profile icon
     String firstLetter = username.substring(0, 1).toUpperCase();
 %>
 
@@ -19,155 +39,281 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Recipe Finder</title>
     <link href="https://fonts.googleapis.com/css2?family=Capriola&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     
     <style>
+        :root {
+            --primary-bg: #f9f9f9;
+            --card-bg: #ffffff;
+            --menu-bg: #f0f0f0;
+            --hover-bg: #e0e0e0;
+            --text-color: #333333;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
         body {
             font-family: 'Capriola', sans-serif;
-            background-color: #f9f9f9;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            margin: 0;
             padding: 0;
-            text-align: center;
+            min-height: 100vh;
         }
 
         .container {
-            margin: auto;
+            margin: 0 auto;
             padding: 20px;
         }
 
         .back-arrow {
             text-align: left;
-            padding: 10px;
-            font-size: 22px;
+            padding: 15px 0;
         }
 
         .back-arrow a {
             text-decoration: none;
-            color: black;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .back-arrow a:hover {
+            transform: translateX(-3px);
+        }
+
+        .profile-section {
+            margin-bottom: 20px;
+        }
+
+
+        .profile-image-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            cursor: pointer;
         }
 
         .profile-image {
-            width: 100px;
-            height: 100px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            background-color: #ccc;
+            background: grey;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            color: white;
+            font-size: 3rem;
             font-weight: bold;
-            color: #fff;
-            margin: 20px auto;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .profile-image:hover {
+            transform: scale(1.05);
         }
 
         .profile-image img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
             object-fit: cover;
         }
 
         .username {
-            font-size: 20px;
+        	justify-content: center;
+        	display:flex;
+            font-size: 1.5rem;
             font-weight: bold;
-            margin-top: 10px;
+            margin: 15px 0;
+            color: var(--text-color);
         }
 
         .menu {
-            background: #f0f0f0;
-            padding: 37px;
-            border-radius: 10px;
-            margin-top: 32px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: var(--shadow);
         }
 
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 10px;
-            font-size: 18px;
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: var(--transition);
         }
 
         .menu-item i {
-            margin-right: 10px;
-            font-size: 20px;
+            margin-right: 15px;
+            font-size: 1.3rem;
+            width: 25px;
+            text-align: center;
+            color: #0BA5A5;
         }
 
         .menu-item:hover {
-            background: #ddd;
-            border-radius: 5px;
+            background: var(--hover-bg);
+            transform: translateX(5px);
         }
         
         .menu-item a {
             text-decoration: none;
-            color: black;
+            color: var(--text-color);
+            flex-grow: 1;
         }
-        
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
 
-    .modal-content {
-        background-color: white;
-        margin: 10% auto;
-        padding: 20px;
-        width: 50%;
-        height: 66%;
-        border-radius: 10px;
-        position: relative;
-    }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-    .modal-content iframe {
-        width: 100%;
-        height: 90%;
-        border: none;
-    }
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
 
-    .close {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 30px;
-        cursor: pointer;
-    }
+        .modal-content {
+            background-color: white;
+            width: 90%;
+            max-width: 600px;
+            height: 80%;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-content iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            color: #666;
+            cursor: pointer;
+            z-index: 10;
+            transition: var(--transition);
+        }
+
+        .close:hover {
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .profile-image-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .username {
+                font-size: 1.3rem;
+            }
+            
+            .menu-item {
+                padding: 12px;
+                font-size: 1rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                height: 85%;
+            }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="profile-image">
-        <% if (profileImage.equals("logo.png")) { %>
-            <div><%= firstLetter %></div>
-        <% } else { %>
-            <img src="ProfileImageServlet?userId=<%= userSession.getAttribute("userId") %>" 
-                 alt="Profile Image" onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
-        <% } %>
+<div class="container animate__animated animate__fadeIn">
+    <div class="back-arrow">
+        <a href="HomePage.jsp"><i class="fas fa-arrow-left"></i></a>
     </div>
 
-    <form action="ProfileServlet" method="post" enctype="multipart/form-data">
+    <div class="profile-section">
+        <div class="profile-image-container" onclick="document.getElementById('fileInput').click()">
+            <div class="profile-image">
+                <% if (profileImage.equals("logo.png")) { %>
+                    <%= firstLetter %>
+                <% } else { %>
+                    <img src="ProfileImageServlet?userId=<%= userId %>" 
+                         alt="Profile Image" 
+                         onerror="this.onerror=null; this.src='uploads/images/default.jpg';">
+                <% } %>
+            </div>
+        </div>
 
-        <input type="file" name="profileImage" id="fileInput" style="display: none;" onchange="this.form.submit();">
-    </form>
+        <form id="fileInputForm" action="ProfileServlet" method="post" enctype="multipart/form-data">
+            <input type="file" name="profileImage" id="fileInput" accept="image/*" style="display: none;">
+        </form>
 
-    <div class="username"><%= username %></div>
+        <div class="username"><%= username %></div>
+    </div>
 
-<div class="menu">
-    <div class="menu-item" onclick="openModal('EditName.jsp')"><i class="fas fa-edit"></i><a href="#">Edit Name</a></div>
-    <div class="menu-item" ><i class="fas fa-heart"></i><a href="Favorites.jsp">Favorites</a></div>
-    <div class="menu-item" onclick="openModal('ChangePassword.jsp')"><i class="fas fa-cog"></i><a href="#">Settings</a></div>
-    <div class="menu-item" ><i class="fas fa-bullseye"></i> <a href="Ourgoals.jsp">Our Goals</a></div>
-    <div class="menu-item" ><i class="fas fa-info-circle"></i> <a href="About.jsp">About</a></div>
-    <div class="menu-item" onclick="openModal('support.jsp')"><i class="fas fa-user-friends"></i> <a href="#">Support</a></div>
+    <div class="menu">
+        <div class="menu-item animate__animated animate__fadeInUp" style="animation-delay: 0.1s" onclick="openModal('EditName.jsp')">
+            <i class="fas fa-edit"></i>
+            <a href="#">Edit Name</a>
+        </div>
+        <div class="menu-item animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+            <i class="fas fa-heart"></i>
+            <a href="Favorites.jsp">Favorites</a>
+        </div>
+        <div class="menu-item animate__animated animate__fadeInUp" style="animation-delay: 0.3s" onclick="openModal('ChangePassword.jsp')">
+            <i class="fas fa-cog"></i>
+            <a href="#">Settings</a>
+        </div>
+        <div class="menu-item animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+            <i class="fas fa-bullseye"></i>
+            <a href="Ourgoals.jsp">Our Goals</a>
+        </div>
+        <div class="menu-item animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
+            <i class="fas fa-info-circle"></i>
+            <a href="About.jsp">About</a>
+        </div>
+        <div class="menu-item animate__animated animate__fadeInUp" style="animation-delay: 0.6s" onclick="openModal('support.jsp')">
+            <i class="fas fa-user-friends"></i>
+            <a href="#">Support</a>
+        </div>
+    </div>
 </div>
+
 <!-- Modal Structure -->
 <div id="contentModal" class="modal">
     <div class="modal-content">
@@ -176,24 +322,61 @@
     </div>
 </div>
 
-</div>
 <script>
+    // Handle profile image upload
+    document.getElementById('fileInput').addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            document.getElementById('fileInputForm').submit();
+        }
+    });
+
+    // Modal functions
     function openModal(pageUrl) {
-        document.getElementById("modalIframe").src = pageUrl;
-        document.getElementById("contentModal").style.display = "block";
+        const modal = document.getElementById("contentModal");
+        const iframe = document.getElementById("modalIframe");
+        
+        iframe.src = pageUrl;
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
     }
 
     function closeModal() {
-        document.getElementById("contentModal").style.display = "none";
-        document.getElementById("modalIframe").src = "";
+        const modal = document.getElementById("contentModal");
+        const iframe = document.getElementById("modalIframe");
+        
+        modal.classList.remove("show");
+        setTimeout(() => {
+            iframe.src = "";
+            document.body.style.overflow = "";
+        }, 300);
     }
 
-    window.onclick = function(event) {
-        let modal = document.getElementById("contentModal");
-        if (event.target == modal) {
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById("contentModal");
+        if (event.target === modal) {
             closeModal();
         }
-    };
+    });
+
+    // Animate menu items as they come into view
+    document.addEventListener("DOMContentLoaded", function() {
+        const menuItems = document.querySelectorAll('.menu-item');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateX(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        menuItems.forEach(item => {
+            observer.observe(item);
+        });
+    });
 </script>
+
 </body>
 </html>

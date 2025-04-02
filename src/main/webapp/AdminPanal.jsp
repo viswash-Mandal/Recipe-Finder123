@@ -25,12 +25,14 @@
     int soupCount = 0;
     int healthyCount = 0;
     int sweetsCount = 0;
-    int userCount = 0;  // Variable for the number of users
+    int userCount = 0;
+    int totalRecipes = 0;
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
         conn = DriverManager.getConnection(url, username, password);
 
+        // Get recipe counts by category
         String query = "SELECT category, COUNT(*) AS count FROM Recipes GROUP BY category";
         ps = conn.prepareStatement(query);
         rs = ps.executeQuery();
@@ -38,6 +40,7 @@
         while (rs.next()) {
             String category = rs.getString("category");
             int count = rs.getInt("count");
+            totalRecipes += count;
             switch (category) {
                 case "Vegetarian": vegetarianCount = count; break;
                 case "Non-Vegetarian": nonVegetarianCount = count; break;
@@ -51,11 +54,10 @@
             }
         }
 
-        // Query to count the number of users
-        String userQuery = "SELECT COUNT(*) AS userCount FROM Users";  // Assuming the users are stored in a table called "Users"
+        // Get user count
+        String userQuery = "SELECT COUNT(*) AS userCount FROM Users";
         ps = conn.prepareStatement(userQuery);
         rs = ps.executeQuery();
-
         if (rs.next()) {
             userCount = rs.getInt("userCount");
         }
@@ -72,209 +74,708 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Capriola&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Admin Dashboard | RecipeFinder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body {
-            font-family: Capriola, sans-serif;
+        :root {
+            --primary-color: #ff4757;
+            --secondary-color: #1e90ff;
+            --accent-color: #2ed573;
+            --dark-color: #2f3542;
+            --light-color: #f1f2f6;
+            --sidebar-width: 280px;
+            --transition-speed: 0.3s;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f8f8f8;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #333;
+            line-height: 1.6;
         }
 
         .container {
             display: flex;
+            min-height: 100vh;
         }
 
+        /* Sidebar Styles */
         .sidebar {
-            width: 250px;
-            background-color: #ff3b5c;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, var(--dark-color), #1a1a1a);
             color: white;
-            padding: 20px;
+            padding: 2rem 1.5rem;
             height: 100vh;
+            position: fixed;
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            transition: transform var(--transition-speed) ease;
         }
 
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 40px;
-            font-size: 24px;
+        .sidebar-header {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
             font-weight: 600;
-        }
-
-        .sidebar button {
-            width: 100%;
-            padding: 15px;
-            background-color: #ff3b5c;
-            color: white;
-            border: none;
-            font-size: 16px;
-            margin: 10px 0;
-            cursor: pointer;
-            border-radius: 5px;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            transition: background-color 0.3s ease;
+            gap: 0.75rem;
         }
 
-        .sidebar button:hover {
+        .sidebar-header h2 i {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-color);
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.85rem 1rem;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            gap: 1rem;
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all var(--transition-speed) ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff6b81;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: margin-left var(--transition-speed) ease;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .page-title p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Dashboard Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-speed) ease;
+            cursor: pointer;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.blue {
+            border-left-color: var(--secondary-color);
+        }
+
+        .stat-card.green {
+            border-left-color: var(--accent-color);
+        }
+
+        .stat-card.purple {
+            border-left-color: #9c88ff;
+        }
+
+        .stat-card.orange {
+            border-left-color: #ffa502;
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .stat-icon.primary {
+            background-color: var(--primary-color);
+        }
+
+        .stat-icon.secondary {
+            background-color: var(--secondary-color);
+        }
+
+        .stat-icon.accent {
+            background-color: var(--accent-color);
+        }
+
+        .stat-icon.purple {
+            background-color: #9c88ff;
+        }
+
+        .stat-icon.orange {
+            background-color: #ffa502;
+        }
+
+        .stat-title {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            color: var(--dark-color);
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: var(--accent-color);
+        }
+
+        .stat-change.negative {
+            color: var(--primary-color);
+        }
+
+        /* Category Cards */
+        .categories-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-speed) ease;
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .category-icon.vegetarian {
+            background-color: #2ecc71;
+        }
+
+        .category-icon.non-veg {
+            background-color: #e74c3c;
+        }
+
+        .category-icon.baking {
+            background-color: #f39c12;
+        }
+
+        .category-icon.party {
+            background-color: #9b59b6;
+        }
+
+        .category-icon.salad {
             background-color: #1abc9c;
         }
 
-        .sidebar button a {
-            text-decoration: none;
-            color: white;
-            font-size: 18px;
-            margin-left: 10px;
+        .category-icon.desserts {
+            background-color: #e84393;
         }
 
-        .sidebar i {
-            font-size: 20px;
-            margin-right: 10px;
+        .category-icon.soup {
+            background-color: #0984e3;
         }
 
-        .dashboard {
-            flex: 1;
-            padding: 30px;
-            background-color: white;
+        .category-icon.healthy {
+            background-color: #00b894;
         }
 
-        .cards {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
+        .category-icon.sweets {
+            background-color: #fd79a8;
         }
 
-        .card {
-            width: 200px;
-            padding: 20px;
-            background-color: #ff3b5c;
-            color: white;
-            text-align: center;
-            border-radius: 10px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
+        .category-icon.search {
+            background-color: #6c5ce7;
         }
 
-        .card i {
-            font-size: 24px;
-            margin-bottom: 10px;
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
         }
 
-        .logout {
-            width: 114px;
-            padding: 10px;
-            color:white;
-            background-color: #ff3b5c;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-            margin-top: auto;
+        .category-count {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
         }
 
         /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
-            z-index: 1;
-            left: 0;
             top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity var(--transition-speed) ease;
+            pointer-events: none;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .modal-content {
-            background-color: #fff;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform var(--transition-speed) ease;
+            position: relative;
         }
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
             cursor: pointer;
+            color: #666;
+            transition: color var(--transition-speed) ease;
         }
 
-        .close:hover {
-            color: #000;
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="sidebar">
-            <h2>DashBoard</h2>
-            <button><i class="fas fa-tachometer-alt"></i><a href="AdminPanal.jsp">Dashboard</a></button>
-            <button><i class="fas fa-plus-circle"></i><a href="AddRecipe.jsp">Add Recipes</a></button>
-            <button><i class="fas fa-list-ul"></i><a href="RecipeList.jsp">List of all Recipes</a></button>
-            <form action="Login.jsp" method="post">
-                <input type="submit" value="LogOut" class="logout">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-utensils"></i> RecipeFinder</h2>
+            </div>
+            <nav class="nav-menu">
+                <div class="nav-item active">
+                    <a href="AdminPanal.jsp" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="AddRecipe.jsp" class="nav-link">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Add Recipes</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="RecipeList.jsp" class="nav-link">
+                        <i class="fas fa-list-ul"></i>
+                        <span>All Recipes</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="UserManagement.jsp" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>User Management</span>
+                    </a>
+                </div>
+            </nav>
+            <form action="LogoutServlet" method="post">
+                <button type="submit" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Log Out</span>
+                </button>
             </form>
         </div>
-        <div class="dashboard">
-            <h1>DashBoard</h1>
-            <div class="cards">
-                <div class="card"><i class="fas fa-carrot"></i><h3>Vegetarian</h3><p><%= vegetarianCount %></p></div>
-                <div class="card"><i class="fas fa-drumstick-bite"></i><h3>Non-Vegetarian</h3><p><%= nonVegetarianCount %></p></div>
-                <div class="card"><i class="fas fa-bread-slice"></i><h3>Baking</h3><p><%= bakingCount %></p></div>
-                <div class="card"><i class="fas fa-glass-cheers"></i><h3>Party</h3><p><%= partyCount %></p></div>
-                <div class="card"><i class="fas fa-leaf"></i><h3>Salad</h3><p><%= saladCount %></p></div>
-                <div class="card"><i class="fas fa-ice-cream"></i><h3>Desserts</h3><p><%= dessertsCount %></p></div>
-                <div class="card"><i class="fas fa-hotdog"></i><h3>Soup</h3><p><%= soupCount %></p></div>
-                <div class="card"><i class="fas fa-apple-alt"></i><h3>Healthy</h3><p><%= healthyCount %></p></div>
-                <div class="card"><i class="fas fa-cookie"></i><h3>Sweets</h3><p><%= sweetsCount %></p></div>
-                <div class="card" onclick="showSearchedRecipes()"><i class="fas fa-search"></i><h3>Missing-Recipes</h3><p>View List</p></div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <div class="page-title">
+                    <h1>Admin Dashboard</h1>
+                    <p>Welcome back! Here's what's happening with your recipes today.</p>
+                </div>
+                <div class="user-profile">
+                    <div class="user-avatar">A</div>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">Total Recipes</div>
+                            <div class="stat-value"><%= totalRecipes %></div>
+                        </div>
+                        <div class="stat-icon primary">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-title">Total Users</div>
+                            <div class="stat-value"><%= userCount %></div>
+                        </div>
+                        <div class="stat-icon secondary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card green">
+    			<div class="stat-header">
+        			<div>
+            			<div class="stat-title">Missing Recipes</div>
+            			<div class="stat-value" id="missingRecipesCount">0</div>
+            			<div class="stat-change">
+                		<span id="missingRecipesStatus">Loading...</span>
+            			</div>
+        			</div>
+        		<div class="stat-icon accent" onclick="showMissingRecipes()">
+            		<i class="fas fa-search"></i>
+        		</div>
+    		</div>
+			</div>
+
+            </div>
+
+            <!-- Recipe Categories -->
+            <h2 class="categories-title">Recipe Categories</h2>
+            <div class="categories-grid">
+                <div class="category-card" onclick="showCategoryRecipes('Vegetarian')">
+                    <div class="category-icon vegetarian">
+                        <i class="fas fa-carrot"></i>
+                    </div>
+                    <h3 class="category-name">Vegetarian</h3>
+                    <div class="category-count"><%= vegetarianCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Non-Vegetarian')">
+                    <div class="category-icon non-veg">
+                        <i class="fas fa-drumstick-bite"></i>
+                    </div>
+                    <h3 class="category-name">Non-Vegetarian</h3>
+                    <div class="category-count"><%= nonVegetarianCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Baking')">
+                    <div class="category-icon baking">
+                        <i class="fas fa-bread-slice"></i>
+                    </div>
+                    <h3 class="category-name">Baking</h3>
+                    <div class="category-count"><%= bakingCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Party')">
+                    <div class="category-icon party">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3 class="category-name">Party</h3>
+                    <div class="category-count"><%= partyCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Salad')">
+                    <div class="category-icon salad">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="category-name">Salad</h3>
+                    <div class="category-count"><%= saladCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Desserts')">
+                    <div class="category-icon desserts">
+                        <i class="fas fa-ice-cream"></i>
+                    </div>
+                    <h3 class="category-name">Desserts</h3>
+                    <div class="category-count"><%= dessertsCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Soup')">
+                    <div class="category-icon soup">
+                        <i class="fas fa-hotdog"></i>
+                    </div>
+                    <h3 class="category-name">Soup</h3>
+                    <div class="category-count"><%= soupCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Healthy')">
+                    <div class="category-icon healthy">
+                        <i class="fas fa-apple-alt"></i>
+                    </div>
+                    <h3 class="category-name">Healthy</h3>
+                    <div class="category-count"><%= healthyCount %></div>
+                </div>
+                <div class="category-card" onclick="showCategoryRecipes('Sweets')">
+                    <div class="category-icon sweets">
+                        <i class="fas fa-cookie"></i>
+                    </div>
+                    <h3 class="category-name">Sweets</h3>
+                    <div class="category-count"><%= sweetsCount %></div>
+                </div>
+                
             </div>
         </div>
     </div>
 
-    <!-- Modal for Searched Recipes -->
-    <div id="searchedRecipesModal" class="modal">
+    <!-- Modal for Displaying Recipes -->
+    <div class="modal" id="recipesModal">
         <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Searched Recipes</h2>
-            <div id="searchedRecipesList"></div>
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Recipes</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalContent">
+                <!-- Content will be loaded here -->
+            </div>
         </div>
     </div>
 
     <script>
+        // Show recipes for a specific category
+        function showCategoryRecipes(category) {
+            fetch('GetRecipesByCategory.jsp?category=' + encodeURIComponent(category))
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('modalTitle').textContent = category + ' Recipes';
+                    document.getElementById('modalContent').innerHTML = data;
+                    document.getElementById('recipesModal').classList.add('show');
+                    document.body.style.overflow = 'hidden';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('modalContent').innerHTML = 
+                        '<p>Error loading recipes. Please try again.</p>';
+                });
+        }
+
+        // Show searched recipes
         function showSearchedRecipes() {
-            // Fetch the searched recipes from the server
             fetch('GetSearchedRecipes.jsp')
                 .then(response => response.text())
                 .then(data => {
-                    document.getElementById('searchedRecipesList').innerHTML = data;
-                    document.getElementById('searchedRecipesModal').style.display = 'block';
+                    document.getElementById('modalTitle').textContent = 'Searched Recipes';
+                    document.getElementById('modalContent').innerHTML = data;
+                    document.getElementById('recipesModal').classList.add('show');
+                    document.body.style.overflow = 'hidden';
                 })
-                .catch(error => console.error('Error fetching searched recipes:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('modalContent').innerHTML = 
+                        '<p>Error loading searched recipes. Please try again.</p>';
+                });
         }
 
+        // Close modal
         function closeModal() {
-            document.getElementById('searchedRecipesModal').style.display = 'none';
+            document.getElementById('recipesModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                document.getElementById('modalContent').innerHTML = '';
+            }, 300);
         }
 
-        // Close the modal if the user clicks outside of it
-        window.onclick = function(event) {
-            var modal = document.getElementById('searchedRecipesModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === document.getElementById('recipesModal')) {
+                closeModal();
             }
-        }
+        });
+
+        // Add animation to cards when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.category-card, .stat-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('fade-in');
+                }, index * 100);
+            });
+        });
     </script>
 </body>
 </html>

@@ -16,12 +16,12 @@
             background-color: #f9f9f9;
             margin: 0;
             padding: 0;
-            text-align: center;
+            min-height: 100vh;
         }
 
         h1 {
             text-align: start;
-            margin-left: 75px;
+            margin: 30px 0 20px 75px;
             font-size: 24px;
             display: flex;
             align-items: center;
@@ -31,7 +31,7 @@
         .recipe-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
             padding: 20px;
             justify-content: center;
         }
@@ -39,32 +39,41 @@
         .recipe-card {
             background: white;
             padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
             position: relative;
             width: 90%;
             max-width: 320px;
             margin: auto;
-            height: auto;
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            will-change: transform;
         }
 
-        /* 🔥 Hover Effect */
         .recipe-card:hover {
-            transform: scale(1.05); /* Slightly enlarges the card */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adds a stronger shadow */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
         }
 
         .recipe-card img {
             width: 100%;
             height: 200px;
-            border-radius: 10px;
+            border-radius: 8px;
             object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .recipe-card:hover img {
+            transform: scale(1.02);
         }
 
         .recipe-card h3 {
-            margin: 10px 0;
+            margin: 12px 0;
+            color: #333;
+            font-size: 18px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .fav-icon {
@@ -73,12 +82,35 @@
             top: 22px;
             right: 22px;
             cursor: pointer;
-            color: gray;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
             z-index: 10;
         }
 
+        .fav-icon:hover {
+            transform: scale(1.1);
+        }
+
         .fav-icon.active {
-            color: red;
+            color: #ff2d2d;
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* Smooth loading effect */
+        .recipe-card {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
         }
     </style>
 </head>
@@ -88,6 +120,23 @@
 
 <div class="recipe-grid">
     <%
+        // Check if the user is logged in through session or cookies
+        String user = (String) session.getAttribute("username");
+        
+        // Check if the session exists; if not, check for cookies
+        if (user == null) {
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("username")) {
+                        user = cookie.getValue();
+                        session.setAttribute("username", user); // Restore session from cookie
+                        break;
+                    }
+                }
+            }
+        }
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/RecipeFinder", "root", "root");

@@ -23,7 +23,7 @@ public class AddRecipeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // Define upload directories for images and videos
-    private static final String IMAGE_UPLOAD_DIRECTORY = "C:\\Users\\Rohit\\OneDrive\\Desktop\\RecipeFinder\\uploads\\images";
+    private static final String IMAGE_UPLOAD_DIRECTORY = "C:\\Users\\Rohit\\eclipse-workspace\\Recipe-Finder123\\src\\main\\webapp\\uploads\\images";
     private static final String VIDEO_UPLOAD_DIRECTORY = "C:\\Users\\Rohit\\OneDrive\\Desktop\\RecipeFinder\\uploads\\videos";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -79,6 +79,9 @@ public class AddRecipeServlet extends HttpServlet {
             pstmt.setString(7, videoFileName);
             pstmt.executeUpdate();
 
+            // Refresh Eclipse workspace
+            refreshEclipseWorkspace();
+
             // Redirect to the form with a success status
             response.sendRedirect("AddRecipe.jsp?status=success");
         } catch (Exception e) {
@@ -125,5 +128,17 @@ public class AddRecipeServlet extends HttpServlet {
         filePart.write(filePath);
 
         return uniqueFileName;
+    }
+
+    /**
+     * Refreshes the Eclipse workspace using a system command.
+     */
+    private void refreshEclipseWorkspace() {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/c", "eclipse -refresh");
+            processBuilder.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
