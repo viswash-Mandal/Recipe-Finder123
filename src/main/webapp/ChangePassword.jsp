@@ -12,7 +12,7 @@
         return;
     }
 %>
-# change password encrypted with sha256  askjfhygsyufgsui
+# change password encrypted with sha256  askjfhygsyufgsuiuhsfsdhuiashfu
 <!DOCTYPE html>
 <html lang="en">
 <head>
