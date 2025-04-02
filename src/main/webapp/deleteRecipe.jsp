@@ -42,3 +42,5 @@
     }
 %>
 	
+
+# delete recipe from database
