@@ -12,7 +12,7 @@
         return;
     }
 %>
-# change password encrypted with sha256 and salt
+# change password encrypted with sha256 
 <!DOCTYPE html>
 <html lang="en">
 <head>
